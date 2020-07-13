@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.fbu_app.R;
 import com.example.fbu_app.ui.home.dummy.DummyContent.DummyItem;
 
 import java.util.List;
