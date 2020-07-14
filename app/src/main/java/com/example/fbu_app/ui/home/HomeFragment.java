@@ -1,18 +1,24 @@
 package com.example.fbu_app.ui.home;
 
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.fbu_app.R;
 
@@ -29,9 +35,25 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RelativeLayout layout1 = view.findViewById(R.id.map);
-        RelativeLayout layout2 = view.findViewById(R.id.list);
+        final RelativeLayout layout2 = view.findViewById(R.id.map);
+        final RelativeLayout layout1 = view.findViewById(R.id.list);
 
+        //Button button = view.findViewById(R.id.button);
+        //Button button1 = view.findViewById(R.id.button2);
+
+        int height = Resources.getSystem().getDisplayMetrics().heightPixels;
+
+        LinearLayout.LayoutParams mapParams = new LinearLayout.LayoutParams(layout1.getLayoutParams());
+        LinearLayout.LayoutParams listParams = new LinearLayout.LayoutParams(layout2.getLayoutParams());
+
+        mapParams.weight = 0;
+
+        layout1.setLayoutParams(mapParams);
+
+        listParams.weight = 1;
+
+        layout2.setLayoutParams(listParams);
+        
         FragmentManager manager = getFragmentManager();
 
         PostMapFragment mapFrag = new PostMapFragment();
