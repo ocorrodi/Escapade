@@ -9,17 +9,17 @@
         android:id="@+id/navigation_home"
         android:name="com.example.fbu_app.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_postlist" />
+        tools:layout="@layout/fragment_post_list" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.fbu_app.ui.dashboard.DashboardFragment"
+        android:name="com.example.fbu_app.ui.dashboard.AddFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_add" />
 
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="com.example.fbu_app.ui.profile.ProfileFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_profile" />
 </navigation>
