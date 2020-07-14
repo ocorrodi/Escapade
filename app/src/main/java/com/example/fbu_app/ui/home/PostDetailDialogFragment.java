@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.annotation.NonNull;
@@ -17,8 +18,11 @@ public class PostDetailDialogFragment extends DialogFragment {
 
     public PostDetailDialogFragment() {}
 
-    public static PostDetailDialogFragment newInstance() {
+    public static PostDetailDialogFragment newInstance(String title) {
         PostDetailDialogFragment frag = new PostDetailDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("title", title);
+        frag.setArguments(bundle);
         return frag;
     }
 
@@ -41,6 +45,9 @@ public class PostDetailDialogFragment extends DialogFragment {
                 getDialog().dismiss();
             }
         });
+        TextView textView = view.findViewById(R.id.tvItemName);
+        String title = getArguments().getString("title");
+        textView.setText(title);
         getDialog().setCanceledOnTouchOutside(true);
         getDialog().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);

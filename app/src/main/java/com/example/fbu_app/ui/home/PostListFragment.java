@@ -65,7 +65,7 @@ public class PostListFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyPostRecyclerViewAdapter(DummyContent.ITEMS));
+            recyclerView.setAdapter(new PostsAdapter(DummyContent.ITEMS, getFragmentManager()));
         }
         return view;
     }

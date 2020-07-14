@@ -41,7 +41,7 @@ public class HomeFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PostDetailDialogFragment newFrag = PostDetailDialogFragment.newInstance();
+                PostDetailDialogFragment newFrag = PostDetailDialogFragment.newInstance("title");
                 newFrag.show(manager, "fragment_post_detail");
             }
         });
