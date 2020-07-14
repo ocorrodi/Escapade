@@ -11,7 +11,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight=".5"
-        android:orientation="horizontal"></RelativeLayout>
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="47dp"
+            android:layout_marginTop="223dp"
+            android:text="Show Modal Overlay" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/list"

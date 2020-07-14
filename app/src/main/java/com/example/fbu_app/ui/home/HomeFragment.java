@@ -34,6 +34,17 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        final FragmentManager manager = getFragmentManager();
+
+        Button button = view.findViewById(R.id.button4);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PostDetailDialogFragment newFrag = PostDetailDialogFragment.newInstance();
+                newFrag.show(manager, "fragment_post_detail");
+            }
+        });
 
         final RelativeLayout layout2 = view.findViewById(R.id.map);
         final RelativeLayout layout1 = view.findViewById(R.id.list);
@@ -48,19 +59,18 @@ public class HomeFragment extends Fragment {
 
         mapParams.weight = 0;
 
-        layout1.setLayoutParams(mapParams);
+        //layout1.setLayoutParams(mapParams);
 
         listParams.weight = 1;
 
-        layout2.setLayoutParams(listParams);
-        
-        FragmentManager manager = getFragmentManager();
+        //layout2.setLayoutParams(listParams);
 
         PostMapFragment mapFrag = new PostMapFragment();
         PostListFragment listFrag = new PostListFragment();
 
         manager.beginTransaction().replace(R.id.map, mapFrag, mapFrag.getTag()).commit();
         manager.beginTransaction().replace(R.id.list, listFrag, listFrag.getTag()).commit();
+
 
     }
 }
