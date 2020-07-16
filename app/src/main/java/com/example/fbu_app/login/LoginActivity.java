@@ -37,7 +37,9 @@ public class LoginActivity extends AppCompatActivity {
         final Button loginButton = findViewById(R.id.login);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
-        queryPosts();
+        if (ParseUser.getCurrentUser() != null) {
+            goMainActivity();
+        }
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,21 +86,5 @@ public class LoginActivity extends AppCompatActivity {
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
         finish();
-    }
-
-    protected void queryPosts() {
-        ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
-
-        query.findInBackground(new FindCallback<ParseUser>() {
-            @Override
-            public void done(List<ParseUser> posts, ParseException e) {
-                if (e != null) {
-                    Log.e("LoginActivity", "issue with getting posts");
-                }
-                for (ParseUser post : posts) {
-                    //Log.i(TAG, "Post: " + post.getDescription() + " username: " + post.getUser().getUsername());
-                }
-            }
-        });
     }
 }
