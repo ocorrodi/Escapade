@@ -8,15 +8,60 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:text="@string/large_text" />
 
         <LinearLayout
             android:id="@+id/addStuff"
             android:layout_width="match_parent"
-            android:layout_height="100dp" />
+            android:layout_height="100dp"
+            android:layout_below="@+id/etLocation"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="150dp"
+            android:layout_marginEnd="0dp"
+            android:orientation="horizontal" />
+
+        <EditText
+            android:id="@+id/etTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="59dp"
+            android:layout_marginEnd="103dp"
+            android:ems="10"
+            android:hint="title"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/etDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etTitle"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="97dp"
+            android:layout_marginTop="40dp"
+            android:ems="10"
+            android:hint="date"
+            android:inputType="date" />
+
+        <EditText
+            android:id="@+id/etLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etDate"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="97dp"
+            android:layout_marginTop="40dp"
+            android:ems="10"
+            android:hint="location"
+            android:inputType="textPersonName" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/addStuff"
+            android:layout_marginTop="50dp"
+            android:text="Submit"
+            android:layout_centerHorizontal="true"/>
+
     </RelativeLayout>
 </androidx.core.widget.NestedScrollView>

@@ -16,10 +16,14 @@ import com.example.fbu_app.MainActivity;
 import com.example.fbu_app.R;
 
 
+import com.parse.FindCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
+
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -33,12 +37,14 @@ public class LoginActivity extends AppCompatActivity {
         final Button loginButton = findViewById(R.id.login);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
+        queryPosts();
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
-                loginUser(username, password);
+                signUpUser(username, password);
             }
         });
     }
@@ -50,7 +56,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void done(ParseException e) {
                 if (e != null) {
-                    Log.e("LoginActivity", "error signing up");
+                    Log.e("LoginActivity", "error signing up" + e.toString());
+                    Toast.makeText(LoginActivity.this, "error", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Toast.makeText(LoginActivity.this, "sign up successful", Toast.LENGTH_SHORT).show();
@@ -77,5 +84,21 @@ public class LoginActivity extends AppCompatActivity {
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
         finish();
+    }
+
+    protected void queryPosts() {
+        ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
+
+        query.findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> posts, ParseException e) {
+                if (e != null) {
+                    Log.e("LoginActivity", "issue with getting posts");
+                }
+                for (ParseUser post : posts) {
+                    //Log.i(TAG, "Post: " + post.getDescription() + " username: " + post.getUser().getUsername());
+                }
+            }
+        });
     }
 }
