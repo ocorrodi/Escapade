@@ -73,6 +73,6 @@ Optional:
 
 ## Wireframes
 
-![Wireframes 1](https://github.com/ocorrodi/FBU_App/blob/master/wireframes1.png)
+![Wireframes 1](https://github.com/ocorrodi/FBU_App/wireframes1.png)
 
-![Wireframes 2](https://github.com/ocorrodi/FBU_App/blob/master/wireframes2.png)
+![Wireframes 2](https://github.com/ocorrodi/FBU_App/wireframes2.png)
