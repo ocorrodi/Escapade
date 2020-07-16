@@ -72,5 +72,7 @@ Optional:
 * Profile -> display of friends, suggestions, or "my posts" in full screen
 
 ## Wireframes
-![Wireframes 1](wireframes pt 1.pdf)
-![Wireframes 2](wireframes pt 2.pdf)
+
+![Wireframes 1](wireframes1.png)
+
+![Wireframes 2](wireframes2.png)
