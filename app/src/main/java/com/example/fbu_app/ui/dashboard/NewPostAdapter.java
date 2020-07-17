@@ -2,26 +2,28 @@ package com.example.fbu_app.ui.dashboard;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.fbu_app.R;
-import com.example.fbu_app.ui.dashboard.dummy.DummyContent.DummyItem;
 
+import java.io.File;
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class NewPostAdapter extends RecyclerView.Adapter<NewPostAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<File> images;
 
-    public NewPostAdapter(List<DummyItem> items) {
-        mValues = items;
+    public NewPostAdapter(List<File> items) {
+        images = items;
     }
 
     @Override
@@ -33,32 +35,28 @@ public class NewPostAdapter extends RecyclerView.Adapter<NewPostAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.image = images.get(position);
+        holder.newImage.setImageResource(R.drawable.ic_baseline_add_photo_alternate_24);
+        //Glide.with(holder.context).load(holder.image).into(holder.newImage);
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return images.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+        public File image;
+        public final ImageView newImage;
+        public Context context;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            context = view.getContext();
+            newImage = (ImageView) view.findViewById(R.id.ivNewImage);
         }
 
-        @Override
-        public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
-        }
     }
 }

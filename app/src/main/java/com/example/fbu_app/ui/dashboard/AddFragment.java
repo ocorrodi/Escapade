@@ -60,15 +60,12 @@ public class AddFragment extends Fragment {
     EditText etDate;
     AutoCompleteTextView etLocation;
     final Calendar myCalendar = Calendar.getInstance();
-    ArrayList<String> placesList;
-    ArrayAdapter<String> placesListAdatper;
-    String placesURL;
-    String PLACES_BASE_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json?";
     public static final int AUTOCOMPLETE_REQUEST_CODE = 42;
     public static final String TAG = "AddFragment";
     LatLng latlng;
     Button btnSubmit;
     Date date;
+    public List<File> images;
 
     @Nullable
     @Override

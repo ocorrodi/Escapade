@@ -1,6 +1,8 @@
 package com.example.fbu_app.ui.dashboard;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -13,7 +15,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.fbu_app.R;
-import com.example.fbu_app.ui.dashboard.dummy.DummyContent;
+
+import java.io.File;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -24,6 +30,8 @@ public class NewPostFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
+    public List<File> images;
+    public NewPostAdapter adapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -46,9 +54,6 @@ public class NewPostFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
     }
 
     @Override
@@ -60,13 +65,21 @@ public class NewPostFragment extends Fragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new NewPostAdapter(DummyContent.ITEMS));
+            recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+            Uri uri = resourceToUri(getContext(), R.drawable.ic_baseline_add_photo_alternate_24);
+            new File(String.valueOf(uri));
+            images = new ArrayList<File>();
+            adapter = new NewPostAdapter(images);
+            recyclerView.setAdapter(adapter);
+            images.add(new File(String.valueOf(uri)));
+            adapter.notifyDataSetChanged();
         }
         return view;
+    }
+    public static Uri resourceToUri(Context context, int resID) {
+        return Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
+                context.getResources().getResourcePackageName(resID) + '/' +
+                context.getResources().getResourceTypeName(resID) + '/' +
+                context.getResources().getResourceEntryName(resID) );
     }
 }
