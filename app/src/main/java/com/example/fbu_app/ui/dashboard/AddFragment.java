@@ -132,10 +132,8 @@ public class AddFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 ParseGeoPoint geoPoint = new ParseGeoPoint();
-                //geoPoint.setLatitude(latlng.latitude);
-                //geoPoint.setLongitude(latlng.longitude);
-                geoPoint.setLongitude(0);
-                geoPoint.setLatitude(0);
+                geoPoint.setLatitude(latlng.latitude);
+                geoPoint.setLongitude(latlng.longitude);
                 savePost(etTitle.getText().toString(), ParseUser.getCurrentUser(), geoPoint, myCalendar.getTime());
             }
         });
@@ -151,10 +149,10 @@ public class AddFragment extends Fragment {
 
     public void onSearchCalled() {
         // Set the fields to specify which types of place data to return.
-        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG);
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.ADDRESS_COMPONENTS);
         // Start the autocomplete intent.
         Intent intent = new Autocomplete.IntentBuilder(
-                AutocompleteActivityMode.FULLSCREEN, fields).setCountry("NG") //NIGERIA
+                AutocompleteActivityMode.FULLSCREEN, fields)
                 .build(getContext());
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
     }
