@@ -57,6 +57,9 @@ public class Post extends ParseObject {
     public List<String> getTags() {
         return getList(KEY_TAGS);
     }
+    public void setUser(ParseUser user) {
+        put(KEY_USER, user);
+    }
 
     public void setTitle(String title) {
         put(KEY_TITLE, title);
