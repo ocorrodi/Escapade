@@ -3,6 +3,7 @@ package com.example.fbu_app.ui.dashboard;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +46,7 @@ public class NewPostAdapter extends RecyclerView.Adapter<NewPostAdapter.ViewHold
         return images.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public final View mView;
         public File image;
         public final ImageView newImage;
@@ -58,5 +59,13 @@ public class NewPostAdapter extends RecyclerView.Adapter<NewPostAdapter.ViewHold
             newImage = (ImageView) view.findViewById(R.id.ivNewImage);
         }
 
+        @Override
+        public void onClick(View view) {
+            int position = getAdapterPosition();
+            if (position != (images.size() - 1)) return;
+            Uri newPhoto = getPhoto();
+            images.add(0, new File(String.valueOf(newPhoto)));
+            notifyDataSetChanged();
+        }
     }
 }
