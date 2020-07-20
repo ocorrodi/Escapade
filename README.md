@@ -23,15 +23,16 @@ Allows users to find and contact friends regarding vacation, gap year, and semes
 
 **Required Must-have Stories**
 
-* Authentication with Facebook and connect with Facebook friends
+* User can login and create an account
 * User can view their basic profile information
-* User can add a post with a location, images, rating, notes, and other information
+* User can add a post with a title, location, images, and date
 * User can view posts in a map view as well as in a list view
 * Post details are shown when post is clicked
-* Posts can be filtered and searched for
 
 **Optional Nice-to-have Stories**
 
+* Posts can be filtered and searched for
+* Authentication with Facebook and connect with Facebook friends
 * Posts can be "tagged"
 * Like/favorite button for posts and place to view favorited posts
 * User can view list of friends within the app
