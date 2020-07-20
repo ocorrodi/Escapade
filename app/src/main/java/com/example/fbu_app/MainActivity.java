@@ -2,6 +2,7 @@ package com.example.fbu_app;
 
 import android.os.Bundle;
 
+import com.example.fbu_app.ui.dashboard.AddFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;

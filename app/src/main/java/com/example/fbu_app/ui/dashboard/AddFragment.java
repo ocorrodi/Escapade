@@ -1,6 +1,7 @@
 package com.example.fbu_app.ui.dashboard;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -66,6 +67,7 @@ public class AddFragment extends Fragment {
     Button btnSubmit;
     Date date;
     public List<File> images;
+    public Context newContext = getContext();
 
     @Nullable
     @Override
