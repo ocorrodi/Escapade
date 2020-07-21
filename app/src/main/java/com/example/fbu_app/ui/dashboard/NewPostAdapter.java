@@ -54,7 +54,7 @@ public class NewPostAdapter extends RecyclerView.Adapter<NewPostAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        if (position == 0) {
+        if (position == (images.size()-1)) {
             holder.newImage.setImageResource(R.drawable.ic_baseline_add_photo_alternate_24);
             return;
         }
