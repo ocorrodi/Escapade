@@ -20,6 +20,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.fbu_app.Post;
 import com.example.fbu_app.R;
 
 public class HomeFragment extends Fragment {
@@ -41,8 +42,8 @@ public class HomeFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PostDetailDialogFragment newFrag = PostDetailDialogFragment.newInstance("title");
-                newFrag.show(manager, "fragment_post_detail");
+                //PostDetailDialogFragment newFrag = PostDetailDialogFragment.newInstance();
+                //newFrag.show(manager, "fragment_post_detail");
             }
         });
 

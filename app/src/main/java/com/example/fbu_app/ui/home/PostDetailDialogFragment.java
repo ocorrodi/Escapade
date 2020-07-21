@@ -12,16 +12,17 @@ import androidx.fragment.app.DialogFragment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.fbu_app.Post;
 import com.example.fbu_app.R;
 
 public class PostDetailDialogFragment extends DialogFragment {
 
     public PostDetailDialogFragment() {}
 
-    public static PostDetailDialogFragment newInstance(String title) {
+    public static PostDetailDialogFragment newInstance(Post post) {
         PostDetailDialogFragment frag = new PostDetailDialogFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("title", title);
+        bundle.putString("title", post.getTitle());
         frag.setArguments(bundle);
         return frag;
     }

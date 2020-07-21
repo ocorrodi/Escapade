@@ -1,20 +1,22 @@
 package com.example.fbu_app.ui.home;
 
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.fbu_app.MainActivity;
+import com.bumptech.glide.Glide;
+import com.example.fbu_app.Post;
 import com.example.fbu_app.R;
 import com.example.fbu_app.ui.home.dummy.DummyContent;
 import com.example.fbu_app.ui.home.dummy.DummyContent.DummyItem;
+import com.parse.ParseException;
+import com.parse.ParseUser;
 
 import java.util.List;
 
@@ -24,12 +26,14 @@ import java.util.List;
  */
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<Post> posts;
     FragmentManager manager;
+    Context context;
 
-    public PostsAdapter(List<DummyItem> items, androidx.fragment.app.FragmentManager manager) {
+    public PostsAdapter(List<Post> posts, FragmentManager manager, Context context) {
+        this.posts = posts;
         this.manager = manager;
-        mValues = items;
+        this.context = context;
     }
 
     @Override
@@ -41,41 +45,51 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        Post newPost = posts.get(position);
+        holder.tvTitle.setText(newPost.getTitle());
+        holder.tvLocation.setText(newPost.getLocation().toString());
+
+        try {
+            Glide.with(context).load(newPost.getUser().getParseFile("profileImage").getFile()).into(holder.ivImage);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return posts.size();
     }
 
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+        public TextView tvTitle;
+        public TextView tvLocation;
+        public ImageView ivImage;
+        public Post post;
+
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.item_number);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            tvTitle = view.findViewById(R.id.tvTitle);
+            tvLocation = view.findViewById(R.id.tvLocation);
+            ivImage = view.findViewById(R.id.ivImage);
             view.setOnClickListener(this);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString();
         }
 
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
-            mItem = DummyContent.ITEMS.get(position);
-            PostDetailDialogFragment newFrag = PostDetailDialogFragment.newInstance(mItem.content);
+            post = posts.get(position);
+            PostDetailDialogFragment newFrag = PostDetailDialogFragment.newInstance(post);
             newFrag.show(manager, "fragment_post_detail");
         }
     }
