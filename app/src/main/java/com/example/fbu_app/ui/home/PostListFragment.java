@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,6 +31,7 @@ public class PostListFragment extends Fragment {
     ArrayList<Post> posts;
     public static final String TAG = "PostListFragment";
     public PostsAdapter adapter;
+    View newView;
 
     public PostListFragment() {
     }
@@ -49,35 +51,34 @@ public class PostListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_post_list, container, false);
 
+        newView = view;
+
+        setup();
+
+        //HomeFragment parent = (HomeFragment) getParentFragment();
+
+        List<Fragment> frags = getParentFragmentManager().getFragments();
+
+        HomeFragment homeFrag = (HomeFragment) frags.get(0);
+
+        homeFrag.getPosts();
+
+        return view;
+    }
+
+    public void setup() {
         posts = new ArrayList<>();
 
         // Set the adapter
-        Context context = view.getContext();
-        RecyclerView recyclerView = (RecyclerView) view;
+        Context context = newView.getContext();
+        RecyclerView recyclerView = (RecyclerView) newView;
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         adapter = new PostsAdapter(posts, getFragmentManager(), context);
         recyclerView.setAdapter(adapter);
-        queryPosts();
-        return view;
     }
-    protected void queryPosts() {
-        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
 
-        query.include(Post.KEY_USER);
-        query.setLimit(10);
-        query.addDescendingOrder("createdAt");
-        query.findInBackground(new FindCallback<Post>() {
-            @Override
-            public void done(List<Post> posts2, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "issue with getting posts");
-                }
-                for (Post post : posts) {
-                    Log.i(TAG, "Post: " + post.getTitle() + " username: " + post.getUser().getUsername());
-                }
-                posts.addAll(posts2);
-                adapter.notifyDataSetChanged();
-            }
-        });
+    public void setPosts(List<Post> newPosts) {
+        posts.addAll(newPosts);
+        adapter.notifyDataSetChanged();
     }
 }

@@ -3,6 +3,7 @@ package com.example.fbu_app.ui.home;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +23,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.fbu_app.Post;
 import com.example.fbu_app.R;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 public class HomeFragment extends Fragment {
+
+    ArrayList<Post> posts;
+    PostMapFragment mapFrag;
+    PostListFragment listFrag;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -66,12 +79,38 @@ public class HomeFragment extends Fragment {
 
         //layout2.setLayoutParams(listParams);
 
-        PostMapFragment mapFrag = new PostMapFragment();
-        PostListFragment listFrag = new PostListFragment();
+        mapFrag = new PostMapFragment();
+        listFrag = new PostListFragment();
 
         manager.beginTransaction().replace(R.id.map, mapFrag, mapFrag.getTag()).commit();
         manager.beginTransaction().replace(R.id.list, listFrag, listFrag.getTag()).commit();
 
+        posts = new ArrayList<>();
+        //queryPosts();
+    }
 
+    protected void queryPosts() {
+        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+
+        query.include(Post.KEY_USER);
+        query.setLimit(10);
+        query.addDescendingOrder("createdAt");
+        query.findInBackground(new FindCallback<Post>() {
+            @Override
+            public void done(List<Post> posts2, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "issue with getting posts");
+                }
+                for (Post post : posts2) {
+                    Log.i(TAG, "Post: " + post.getTitle() + " username: " + post.getUser().getUsername());
+                }
+                posts.addAll(posts2);
+                listFrag.setPosts(posts2);
+            }
+        });
+    }
+
+    public void getPosts() {
+        queryPosts();
     }
 }
