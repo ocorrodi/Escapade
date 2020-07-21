@@ -78,6 +78,7 @@ public class PostListFragment extends Fragment {
     }
 
     public void setPosts(List<Post> newPosts) {
+        if (newPosts.size() > 0) posts.clear();
         posts.addAll(newPosts);
         adapter.notifyDataSetChanged();
     }

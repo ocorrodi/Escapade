@@ -10,17 +10,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.BounceInterpolator;
+import android.widget.Toast;
 
+import com.example.fbu_app.Post;
 import com.example.fbu_app.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PostMapFragment extends Fragment {
+
+    public List<Post> posts;
+    public GoogleMap googleMap;
+    public HomeFragment homeFrag;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -36,6 +47,7 @@ public class PostMapFragment extends Fragment {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             LatLng sydney = new LatLng(-34, 151);
+            loadMap(googleMap);
             //googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
             //googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         }
@@ -52,11 +64,19 @@ public class PostMapFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        posts = new ArrayList<>();
+
         SupportMapFragment mapFragment =
-                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.supportMap);
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
+        List<Fragment> frags = getParentFragmentManager().getFragments();
+
+        homeFrag = (HomeFragment) frags.get(0);
+
+        //homeFrag.getPosts();
     }
 
     private void dropPinEffect(final Marker marker) {
@@ -89,5 +109,37 @@ public class PostMapFragment extends Fragment {
                 }
             }
         });
+    }
+    public void setPosts(List<Post> newPosts) {
+        if (newPosts.size() > 0) posts.clear();
+        posts.addAll(newPosts);
+        if (googleMap != null) {
+            updateMap();
+        }
+    }
+
+    private void updateMap() {
+        for (Post post : posts) {
+
+            LatLng point = new LatLng(post.getLocation().getLatitude(), post.getLocation().getLongitude());
+
+            Marker marker = googleMap.addMarker(new MarkerOptions().position(point)
+                    .title(post.getTitle()));
+
+            // Animate marker using drop effect
+            // --> Call the dropPinEffect method here
+            dropPinEffect(marker);
+        }
+    }
+    protected void loadMap(GoogleMap googleMap2) {
+        googleMap = googleMap2;
+        if (googleMap != null) {
+            // Map is ready
+            Toast.makeText(getContext(), "Map Fragment was loaded properly!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getContext(), "Error - Map was null!!", Toast.LENGTH_SHORT).show();
+        }
+        homeFrag.getPosts();
+
     }
 }

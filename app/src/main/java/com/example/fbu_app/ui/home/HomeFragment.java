@@ -106,6 +106,7 @@ public class HomeFragment extends Fragment {
                 }
                 posts.addAll(posts2);
                 listFrag.setPosts(posts2);
+                mapFrag.setPosts(posts2);
             }
         });
     }
