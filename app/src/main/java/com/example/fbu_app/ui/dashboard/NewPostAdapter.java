@@ -133,4 +133,5 @@ public class NewPostAdapter extends RecyclerView.Adapter<NewPostAdapter.ViewHold
     public File getPhotoFile() {
         return photoFile;
     }
+
 }

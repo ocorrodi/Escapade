@@ -108,4 +108,13 @@ public class NewPostFragment extends Fragment {
             }
         }
     }
+
+    public List<File> getImages() {
+        return images;
+    }
+
+    public void clearImages() {
+        images.clear();
+        adapter.notifyDataSetChanged();
+    }
 }

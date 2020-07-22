@@ -9,6 +9,7 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 import org.parceler.Parcel;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -50,7 +51,7 @@ public class Post extends ParseObject {
         return getDate(KEY_DATE);
     }
 
-    public List<Image> getImages() {
+    public List<ParseFile> getImages() {
         return getList(KEY_IMAGES);
     }
 
@@ -73,7 +74,7 @@ public class Post extends ParseObject {
         put(KEY_DATE, date);
     }
 
-    public void setImages(List<Image> images) {
+    public void setImages(List<ParseFile> images) {
         put(KEY_IMAGES, images);
     }
 

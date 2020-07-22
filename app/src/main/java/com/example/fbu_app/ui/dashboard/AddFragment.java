@@ -28,6 +28,7 @@ import androidx.fragment.app.FragmentManager;
 import com.example.fbu_app.BuildConfig;
 import com.example.fbu_app.Post;
 import com.example.fbu_app.R;
+import com.example.fbu_app.ui.home.HomeFragment;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.internal.IGoogleMapDelegate;
 import com.google.android.gms.maps.model.LatLng;
@@ -39,6 +40,7 @@ import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseFileUtils;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -66,8 +68,8 @@ public class AddFragment extends Fragment {
     LatLng latlng;
     Button btnSubmit;
     Date date;
-    public List<File> images;
     public Context newContext = getContext();
+    NewPostFragment newPostFrag;
 
     @Nullable
     @Override
@@ -82,12 +84,20 @@ public class AddFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         FragmentManager manager = getFragmentManager();
         NewPostFragment frag = new NewPostFragment();
+        newPostFrag = frag;
         manager.beginTransaction().replace(R.id.addStuff, frag, frag.getTag()).commit();
         etTitle = view.findViewById(R.id.etTitle);
         etDate = (EditText) view.findViewById(R.id.etDate);
         etDate.setInputType(InputType.TYPE_NULL);
         etLocation = view.findViewById(R.id.etLocation);
         btnSubmit = view.findViewById(R.id.btnSubmit);
+
+        /*List<Fragment> frags = getChildFragmentManager().getFragments();
+        for (int i = 0; i < frags.size(); i++) {
+            if (frags.get(i).getClass() == NewPostFragment.class) {
+                newPostFrag = (NewPostFragment) frags.get(i);
+            }
+        }*/
 
         // Initialize the SDK
         Places.initialize(getActivity().getApplicationContext(), getResources().getString(R.string.google_maps_key));
@@ -185,6 +195,8 @@ public class AddFragment extends Fragment {
         post.setUser(currentUser);
         post.setLocation(location);
         post.setDate(date);
+        List<File> images = newPostFrag.getImages();
+        post.setImages(changeImageType(images.subList(0, images.size() - 1)));
         post.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -196,7 +208,17 @@ public class AddFragment extends Fragment {
                 etDate.setText("");
                 etLocation.setText("");
                 etTitle.setText("");
+                newPostFrag.clearImages();
             }
         });
+    }
+
+    public List<ParseFile> changeImageType(List<File> images) {
+        List<ParseFile> parseFiles = new ArrayList<>();
+        for (File image : images) {
+            ParseFile file = new ParseFile(image);
+            parseFiles.add(file);
+        }
+        return parseFiles;
     }
 }
