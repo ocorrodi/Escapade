@@ -121,6 +121,7 @@ public class HomeFragment extends Fragment {
                 // TODO: Get info about the selected place.
                 Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
                 latlng = place.getLatLng();
+                mapFrag.changeFocus(latlng);
                 queryPosts(true);
             }
 
@@ -173,7 +174,7 @@ public class HomeFragment extends Fragment {
                 double endLat = latlng.latitude;
                 double endLong = latlng.longitude;
                 android.location.Location.distanceBetween(startLat1, startLong1, endLat, endLong, results1);
-                android.location.Location.distanceBetween(startLat1, startLong1, endLat, endLong, results2);
+                android.location.Location.distanceBetween(startLat2, startLong2, endLat, endLong, results2);
                 return Float.compare(results1[0], results2[0]);
             }
         });
@@ -204,7 +205,6 @@ public class HomeFragment extends Fragment {
                 String address = place.getAddress();
                 //searchBar.setText(address);
                 latlng = place.getLatLng();
-                // do query with address
 
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // TODO: Handle the error.

@@ -19,8 +19,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -74,9 +76,11 @@ public class PostMapFragment extends Fragment {
         }
         List<Fragment> frags = getParentFragmentManager().getFragments();
 
-        homeFrag = (HomeFragment) frags.get(0);
-
-        //homeFrag.getPosts();
+        for (int i = 0; i < frags.size(); i++) {
+            if (frags.get(i).getClass() == HomeFragment.class) {
+                homeFrag = (HomeFragment) frags.get(i);
+            }
+        }
     }
 
     private void dropPinEffect(final Marker marker) {
@@ -116,6 +120,8 @@ public class PostMapFragment extends Fragment {
         if (googleMap != null) {
             updateMap();
         }
+        UiSettings settings = googleMap.getUiSettings();
+        settings.setZoomControlsEnabled(true);
     }
 
     private void updateMap() {
@@ -141,5 +147,12 @@ public class PostMapFragment extends Fragment {
         }
         homeFrag.getPosts();
 
+    }
+
+    public void changeFocus(LatLng newLocation) {
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, 15));
+        for (int i = 0; i < 100; i++) {
+            googleMap.animateCamera(CameraUpdateFactory.zoomOut());
+        }
     }
 }
