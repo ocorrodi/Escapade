@@ -3,23 +3,32 @@ package com.example.fbu_app.ui.home;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.BounceInterpolator;
 import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentContainer;
 
 import com.example.fbu_app.Post;
 import com.example.fbu_app.R;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.List;
@@ -60,6 +69,16 @@ public class PostDetailDialogFragment extends DialogFragment {
         exit = view.findViewById(R.id.btnExit);
         tvTitle = view.findViewById(R.id.tvItemName);
         tvLocation = view.findViewById(R.id.tvAddress);
+
+        LatLng latLng = new LatLng(getArguments().getDouble("latitude"), getArguments().getDouble("longitude"));
+
+        PostMapFragment mapFrag = new PostMapFragment(latLng, getArguments().getString("title"));
+
+        getChildFragmentManager().beginTransaction().replace(R.id.location, mapFrag, mapFrag.getTag()).commit();
+
+        //mapFrag.changeFocus(latLng);
+
+        //mapFrag.placeMarker(latLng, getArguments().getString("title"));
 
         exit.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -34,6 +34,15 @@ public class PostMapFragment extends Fragment {
     public List<Post> posts;
     public GoogleMap googleMap;
     public HomeFragment homeFrag;
+    public LatLng location;
+    public String title;
+
+    public PostMapFragment() {}
+
+    public PostMapFragment(LatLng location, String title) {
+        this.location = location;
+        this.title = title;
+    }
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -146,7 +155,12 @@ public class PostMapFragment extends Fragment {
         } else {
             Toast.makeText(getContext(), "Error - Map was null!!", Toast.LENGTH_SHORT).show();
         }
-        homeFrag.getPosts();
+        if (homeFrag != null) homeFrag.getPosts();
+
+        if (location != null) {
+            changeFocus(location);
+            placeMarker(location, title);
+        }
 
     }
 
@@ -155,5 +169,11 @@ public class PostMapFragment extends Fragment {
         for (int i = 0; i < 100; i++) {
             googleMap.animateCamera(CameraUpdateFactory.zoomOut());
         }
+    }
+
+    public void placeMarker(LatLng latLng, String title) {
+        Marker marker = googleMap.addMarker(new MarkerOptions().position(latLng)
+                .title(title));
+        dropPinEffect(marker);
     }
 }
