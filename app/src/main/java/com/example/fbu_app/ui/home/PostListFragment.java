@@ -32,6 +32,7 @@ public class PostListFragment extends Fragment {
     public static final String TAG = "PostListFragment";
     public PostsAdapter adapter;
     View newView;
+    HomeFragment homeFrag;
 
     public PostListFragment() {
     }
@@ -59,8 +60,11 @@ public class PostListFragment extends Fragment {
 
         List<Fragment> frags = getParentFragmentManager().getFragments();
 
-        HomeFragment homeFrag = (HomeFragment) frags.get(0);
-
+        for (int i = 0; i < frags.size(); i++) {
+            if (frags.get(i).getClass() == HomeFragment.class) {
+                homeFrag = (HomeFragment) frags.get(i);
+            }
+        }
         homeFrag.getPosts();
 
         return view;

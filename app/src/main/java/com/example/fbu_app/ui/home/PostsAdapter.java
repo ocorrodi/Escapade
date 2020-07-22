@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.fbu_app.Post;
 import com.example.fbu_app.R;
 import com.example.fbu_app.ui.home.dummy.DummyContent;
@@ -55,7 +56,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         holder.tvTitle.setText(newPost.getTitle());
         holder.tvLocation.setText(getAddress(newPost.getLocation().getLatitude(), newPost.getLocation().getLongitude()));
         try {
-            Glide.with(context).load(newPost.getUser().getParseFile("profileImage").getFile()).into(holder.ivImage);
+            Glide.with(context).load(newPost.getUser().getParseFile("profileImage").getFile()).apply(RequestOptions.circleCropTransform()).into(holder.ivImage);
         } catch (ParseException e) {
             e.printStackTrace();
         }

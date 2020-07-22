@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.fbu_app.R;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -39,7 +40,7 @@ public class ProfileFragment extends Fragment {
         tvUsername = view.findViewById(R.id.tvUsername);
 
         try {
-            Glide.with(getContext()).load(ParseUser.getCurrentUser().getParseFile("profileImage").getFile()).into(ivProfileImage);
+            Glide.with(getContext()).load(ParseUser.getCurrentUser().getParseFile("profileImage").getFile()).apply(RequestOptions.circleCropTransform()).into(ivProfileImage);
         } catch (ParseException e) {
             e.printStackTrace();
         }

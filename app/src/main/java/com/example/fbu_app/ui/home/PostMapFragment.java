@@ -81,6 +81,7 @@ public class PostMapFragment extends Fragment {
                 homeFrag = (HomeFragment) frags.get(i);
             }
         }
+
     }
 
     private void dropPinEffect(final Marker marker) {
