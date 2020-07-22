@@ -18,10 +18,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.fbu_app.Post;
 import com.example.fbu_app.R;
-import com.example.fbu_app.ui.home.dummy.DummyContent;
 import com.example.fbu_app.ui.home.dummy.DummyContent.DummyItem;
 import com.parse.ParseException;
-import com.parse.ParseUser;
 
 import java.io.IOException;
 import java.util.List;
@@ -81,7 +79,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             super(view);
             mView = view;
             tvTitle = view.findViewById(R.id.tvTitle);
-            tvLocation = view.findViewById(R.id.tvLocation);
+            tvLocation = view.findViewById(R.id.tvAddress);
             ivImage = view.findViewById(R.id.ivImage);
             view.setOnClickListener(this);
         }
