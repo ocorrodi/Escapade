@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.fbu_app.R;
-import com.example.fbu_app.ui.profile.dummy.DummyContent;
 
 /**
  * A fragment representing a list of Items.
@@ -65,7 +64,7 @@ public class ProfilePostFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new ProfilePostAdapter(DummyContent.ITEMS));
+            //recyclerView.setAdapter(new ProfilePostAdapter(DummyContent.ITEMS));
         }
         return view;
     }

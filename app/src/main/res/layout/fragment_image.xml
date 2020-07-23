@@ -5,10 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal">
 
-<ImageView
-android:id="@+id/ivPostImage"
-android:layout_width="100dp"
-android:layout_height="100dp"
-android:layout_weight="1"
-tools:srcCompat="@tools:sample/avatars" />
+    <ImageView
+        android:id="@+id/ivPostImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_weight="1"
+        tools:srcCompat="@tools:sample/avatars" />
 </LinearLayout>

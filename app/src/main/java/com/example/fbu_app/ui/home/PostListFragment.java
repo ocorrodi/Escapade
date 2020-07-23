@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 
 import com.example.fbu_app.Post;
 import com.example.fbu_app.R;
-import com.example.fbu_app.ui.home.dummy.DummyContent;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -36,6 +35,7 @@ public class PostListFragment extends Fragment {
 
     public PostListFragment() {
     }
+
 
     public static PostListFragment newInstance(int columnCount) {
         PostListFragment fragment = new PostListFragment();

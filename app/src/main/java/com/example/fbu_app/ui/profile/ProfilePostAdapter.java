@@ -8,21 +8,18 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.fbu_app.R;
-import com.example.fbu_app.ui.profile.dummy.DummyContent.DummyItem;
 
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class ProfilePostAdapter extends RecyclerView.Adapter<ProfilePostAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
 
-    public ProfilePostAdapter(List<DummyItem> items) {
+    /*public ProfilePostAdapter(List<DummyItem> items) {
         mValues = items;
-    }
+    }*/
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -33,21 +30,22 @@ public class ProfilePostAdapter extends RecyclerView.Adapter<ProfilePostAdapter.
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
+        /*holder.mItem = mValues.get(position);
         holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mContentView.setText(mValues.get(position).content);*/
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return 0;
+        //return mValues.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        //public DummyItem mItem;
 
         public ViewHolder(View view) {
             super(view);

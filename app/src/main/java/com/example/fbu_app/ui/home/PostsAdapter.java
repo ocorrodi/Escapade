@@ -18,7 +18,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.fbu_app.Post;
 import com.example.fbu_app.R;
-import com.example.fbu_app.ui.home.dummy.DummyContent.DummyItem;
 import com.parse.ParseException;
 
 import java.io.IOException;

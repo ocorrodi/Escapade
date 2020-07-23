@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.BounceInterpolator;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +20,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentContainer;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fbu_app.Post;
 import com.example.fbu_app.R;
@@ -29,8 +31,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.ParseException;
+import com.parse.ParseFile;
 
+import org.parceler.Parcels;
+
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -41,6 +49,7 @@ public class PostDetailDialogFragment extends DialogFragment {
     TextView tvLocation;
     GoogleMap map;
     Post post;
+    RelativeLayout imageLayout;
 
     public PostDetailDialogFragment() {}
 
@@ -50,6 +59,7 @@ public class PostDetailDialogFragment extends DialogFragment {
         bundle.putString("title", post.getTitle());
         bundle.putDouble("latitude", post.getLocation().getLatitude());
         bundle.putDouble("longitude", post.getLocation().getLongitude());
+        bundle.putParcelable("images", Parcels.wrap(post.getImages()));
         frag.setArguments(bundle);
         return frag;
     }
@@ -69,16 +79,23 @@ public class PostDetailDialogFragment extends DialogFragment {
         exit = view.findViewById(R.id.btnExit);
         tvTitle = view.findViewById(R.id.tvItemName);
         tvLocation = view.findViewById(R.id.tvAddress);
+        imageLayout = view.findViewById(R.id.rvImages);
+
+        ImagesFragment imagesFrag;
 
         LatLng latLng = new LatLng(getArguments().getDouble("latitude"), getArguments().getDouble("longitude"));
 
         PostMapFragment mapFrag = new PostMapFragment(latLng, getArguments().getString("title"));
 
+        try {
+            imagesFrag = new ImagesFragment(reverseImageType((List<ParseFile>) Parcels.unwrap(getArguments().getParcelable("images"))));
+        } catch (ParseException e) {
+            imagesFrag = new ImagesFragment();
+            e.printStackTrace();
+        }
+
         getChildFragmentManager().beginTransaction().replace(R.id.location, mapFrag, mapFrag.getTag()).commit();
-
-        //mapFrag.changeFocus(latLng);
-
-        //mapFrag.placeMarker(latLng, getArguments().getString("title"));
+        getChildFragmentManager().beginTransaction().replace(R.id.rvImages, imagesFrag, imagesFrag.getTag()).commit();
 
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,5 +130,22 @@ public class PostDetailDialogFragment extends DialogFragment {
             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             return "";
         }
+    }
+    public List<ParseFile> changeImageType(List<File> images) {
+        List<ParseFile> parseFiles = new ArrayList<>();
+        for (File image : images) {
+            ParseFile file = new ParseFile(image);
+            parseFiles.add(file);
+        }
+        return parseFiles;
+    }
+
+    public List<File> reverseImageType(List<ParseFile> images) throws ParseException {
+        List<File> files = new ArrayList<>();
+        for (ParseFile image : images) {
+            File file = image.getFile();
+            files.add(file);
+        }
+        return files;
     }
 }

@@ -38,6 +38,11 @@ public class ImagesFragment extends Fragment {
     public ImagesFragment() {
     }
 
+    public ImagesFragment(List<File> newImages) {
+        images = new ArrayList<>();
+        images.addAll(newImages);
+    }
+
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static ImagesFragment newInstance(int columnCount) {
