@@ -61,6 +61,7 @@ public class AddFragment extends Fragment {
 
     EditText etTitle;
     EditText etDate;
+    EditText etNotes;
     AutoCompleteTextView etLocation;
     final Calendar myCalendar = Calendar.getInstance();
     public static final int AUTOCOMPLETE_REQUEST_CODE = 42;
@@ -91,13 +92,7 @@ public class AddFragment extends Fragment {
         etDate.setInputType(InputType.TYPE_NULL);
         etLocation = view.findViewById(R.id.etLocation);
         btnSubmit = view.findViewById(R.id.btnSubmit);
-
-        /*List<Fragment> frags = getChildFragmentManager().getFragments();
-        for (int i = 0; i < frags.size(); i++) {
-            if (frags.get(i).getClass() == NewPostFragment.class) {
-                newPostFrag = (NewPostFragment) frags.get(i);
-            }
-        }*/
+        etNotes = view.findViewById(R.id.etNotes);
 
         // Initialize the SDK
         Places.initialize(getActivity().getApplicationContext(), getResources().getString(R.string.google_maps_key));
@@ -195,6 +190,7 @@ public class AddFragment extends Fragment {
         post.setUser(currentUser);
         post.setLocation(location);
         post.setDate(date);
+        post.setNotes(etNotes.getText().toString());
         List<File> images = newPostFrag.getImages();
         post.setImages(changeImageType(images.subList(0, images.size() - 1)));
         post.saveInBackground(new SaveCallback() {
@@ -209,6 +205,7 @@ public class AddFragment extends Fragment {
                 etLocation.setText("");
                 etTitle.setText("");
                 newPostFrag.clearImages();
+                etNotes.setText("");
             }
         });
     }

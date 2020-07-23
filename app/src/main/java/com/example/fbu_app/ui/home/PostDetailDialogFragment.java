@@ -50,6 +50,7 @@ public class PostDetailDialogFragment extends DialogFragment {
     GoogleMap map;
     Post post;
     RelativeLayout imageLayout;
+    TextView tvNotes;
 
     public PostDetailDialogFragment() {}
 
@@ -60,6 +61,7 @@ public class PostDetailDialogFragment extends DialogFragment {
         bundle.putDouble("latitude", post.getLocation().getLatitude());
         bundle.putDouble("longitude", post.getLocation().getLongitude());
         bundle.putParcelable("images", Parcels.wrap(post.getImages()));
+        bundle.putString("notes", post.getNotes());
         frag.setArguments(bundle);
         return frag;
     }
@@ -80,6 +82,7 @@ public class PostDetailDialogFragment extends DialogFragment {
         tvTitle = view.findViewById(R.id.tvItemName);
         tvLocation = view.findViewById(R.id.tvAddress);
         imageLayout = view.findViewById(R.id.rvImages);
+        tvNotes = view.findViewById(R.id.tvNotes);
 
         ImagesFragment imagesFrag;
 
@@ -106,6 +109,7 @@ public class PostDetailDialogFragment extends DialogFragment {
 
         String title = getArguments().getString("title");
         tvTitle.setText(title);
+        tvNotes.setText(getArguments().getString("notes"));
         tvLocation.setText(getAddress(getArguments().getDouble("latitude"), getArguments().getDouble("longitude")));
 
         getDialog().setCanceledOnTouchOutside(true);
