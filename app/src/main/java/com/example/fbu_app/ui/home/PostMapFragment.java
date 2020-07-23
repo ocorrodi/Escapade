@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.fbu_app.Post;
 import com.example.fbu_app.R;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -21,6 +22,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -46,6 +48,8 @@ public class PostMapFragment extends Fragment {
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
+
+
         /**
          * Manipulates the map once available.
          * This callback is triggered when the map is ready to be used.
@@ -61,7 +65,16 @@ public class PostMapFragment extends Fragment {
             loadMap(googleMap);
             //googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
             //googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            if (location != null) {
+                //changeFocus(location);
+                placeMarker(location, title);
+                //changeFocus(location);
+                UiSettings settings = googleMap.getUiSettings();
+                settings.setZoomControlsEnabled(true);
+                googleMap.animateCamera(CameraUpdateFactory.zoomOut());
+            }
         }
+
     };
 
     @Nullable
@@ -156,19 +169,16 @@ public class PostMapFragment extends Fragment {
             Toast.makeText(getContext(), "Error - Map was null!!", Toast.LENGTH_SHORT).show();
         }
         if (homeFrag != null) homeFrag.getPosts();
-
-        if (location != null) {
-            changeFocus(location);
-            placeMarker(location, title);
-        }
-
     }
 
     public void changeFocus(LatLng newLocation) {
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, 15));
-        for (int i = 0; i < 100; i++) {
+        final LatLngBounds.Builder mapBounds = new LatLngBounds.Builder();
+        mapBounds.include(newLocation);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(mapBounds.build(), 100, 100, 10));
+        //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, 15));
+        /*for (int i = 0; i < 100; i++) {
             googleMap.animateCamera(CameraUpdateFactory.zoomOut());
-        }
+        }*/
     }
 
     public void placeMarker(LatLng latLng, String title) {
@@ -176,4 +186,6 @@ public class PostMapFragment extends Fragment {
                 .title(title));
         dropPinEffect(marker);
     }
+
+
 }
