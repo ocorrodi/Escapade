@@ -38,7 +38,8 @@ public class LoginActivity extends AppCompatActivity {
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
         if (ParseUser.getCurrentUser() != null) {
-            goMainActivity();
+            //goMainActivity();
+            goFBLogin();
         }
 
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -84,6 +85,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private void goMainActivity() {
         Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
+        finish();
+    }
+
+    private void goFBLogin() {
+        Intent i = new Intent(this, FBLoginActivity.class);
         startActivity(i);
         finish();
     }

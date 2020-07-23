@@ -47,7 +47,7 @@ public class ProfileFragment extends Fragment {
 
         tvUsername.setVisibility(View.VISIBLE);
 
-        tvUsername.setText(ParseUser.getCurrentUser().getUsername());
+        tvUsername.setText(ParseUser.getCurrentUser().getString("name"));
 
         //tvUsername.setText("some text");
 
