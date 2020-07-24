@@ -17,7 +17,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.fbu_app.R;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
+
+import java.io.File;
 
 public class ProfileFragment extends Fragment {
 
@@ -39,13 +42,11 @@ public class ProfileFragment extends Fragment {
         ivProfileImage = view.findViewById(R.id.ivProfileImage);
         tvUsername = view.findViewById(R.id.tvUsername);
 
-        Glide.with(getContext()).load(ParseUser.getCurrentUser().getParseFile("profileImage").getUrl()).apply(RequestOptions.circleCropTransform()).into(ivProfileImage);
+        Glide.with(getContext()).load(ParseUser.getCurrentUser().getString("profileImageUri")).apply(RequestOptions.circleCropTransform()).into(ivProfileImage);
 
         tvUsername.setVisibility(View.VISIBLE);
 
         tvUsername.setText(ParseUser.getCurrentUser().getString("name"));
-
-        //tvUsername.setText("some text");
 
         posts.setOrientation(LinearLayout.HORIZONTAL);
 
