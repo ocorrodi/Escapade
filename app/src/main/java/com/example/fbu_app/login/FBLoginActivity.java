@@ -65,9 +65,10 @@ public class FBLoginActivity extends AppCompatActivity {
                             this.stopTracking();
                             ParseUser currentUser = ParseUser.getCurrentUser();
                             currentUser.put("name", Profile.getCurrentProfile().getName());
-                            //Uri uri = Profile.getCurrentProfile().getProfilePictureUri(100, 100);
-                            //ParseFile file = new ParseFile(new File(uri.getPath()));
-                            //currentUser.put("profileImage", file);
+                            Uri uri = Profile.getCurrentProfile().getProfilePictureUri(100, 100);
+                            ParseFile file = new ParseFile(new File(uri.toString()));
+                            currentUser.put("profileImage", file);
+                            currentUser.saveInBackground();
                         }
                     };
                 }

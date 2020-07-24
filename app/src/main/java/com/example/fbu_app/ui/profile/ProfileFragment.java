@@ -39,11 +39,7 @@ public class ProfileFragment extends Fragment {
         ivProfileImage = view.findViewById(R.id.ivProfileImage);
         tvUsername = view.findViewById(R.id.tvUsername);
 
-        try {
-            Glide.with(getContext()).load(ParseUser.getCurrentUser().getParseFile("profileImage").getFile()).apply(RequestOptions.circleCropTransform()).into(ivProfileImage);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        Glide.with(getContext()).load(ParseUser.getCurrentUser().getParseFile("profileImage").getUrl()).apply(RequestOptions.circleCropTransform()).into(ivProfileImage);
 
         tvUsername.setVisibility(View.VISIBLE);
 
