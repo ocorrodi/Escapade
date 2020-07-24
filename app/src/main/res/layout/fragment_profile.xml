@@ -37,4 +37,13 @@
         android:layout_marginTop="333dp"
         android:layout_marginBottom="27dp"
         android:orientation="horizontal"></LinearLayout>
+
+    <TextView
+        android:id="@+id/tvEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="249dp"
+        android:text="TextView" />
 </RelativeLayout>

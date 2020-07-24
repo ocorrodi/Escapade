@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.fbu_app.MainActivity;
 import com.example.fbu_app.R;
@@ -23,6 +24,9 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.Arrays;
@@ -50,12 +54,12 @@ public class FBLoginActivity extends AppCompatActivity {
         }
 
         loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions(Arrays.asList("public_profile", "user_friends"));
+        loginButton.setReadPermissions(Arrays.asList("public_profile", "user_friends", EMAIL));
 
         // Callback registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
-            public void onSuccess(LoginResult loginResult) {
+            public void onSuccess(final LoginResult loginResult) {
                 // App code
                 //LoginManager.getInstance().logInWithReadPermissions(FBLoginActivity.this, Arrays.asList("public_profile", "user_friends"));
                 if (Profile.getCurrentProfile() == null) {
@@ -67,7 +71,7 @@ public class FBLoginActivity extends AppCompatActivity {
                             currentUser.put("name", Profile.getCurrentProfile().getName());
                             Uri uri = Profile.getCurrentProfile().getProfilePictureUri(100, 100);
                             currentUser.put("profileImageUri", uri.toString());
-                            currentUser.saveInBackground();
+                            getInfo(loginResult);
                         }
                     };
                 }
@@ -111,5 +115,29 @@ public class FBLoginActivity extends AppCompatActivity {
 
             }
         }).executeAsync();
+    }
+
+    public void getInfo(LoginResult loginResult) {
+        GraphRequest request = GraphRequest.newMeRequest(
+                loginResult.getAccessToken(),
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        Log.v("LoginActivity", response.toString());
+
+                        // Application code
+                        try {
+                            String email = object.getString("email");
+                            ParseUser.getCurrentUser().put("email", email);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        ParseUser.getCurrentUser().saveInBackground();
+                    }
+                });
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id,name,email,gender,birthday");
+        request.setParameters(parameters);
+        request.executeAsync();
     }
 }

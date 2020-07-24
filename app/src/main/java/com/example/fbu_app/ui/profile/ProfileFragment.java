@@ -26,6 +26,7 @@ public class ProfileFragment extends Fragment {
 
     public ImageView ivProfileImage;
     public TextView tvUsername;
+    public TextView tvEmail;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -41,12 +42,15 @@ public class ProfileFragment extends Fragment {
 
         ivProfileImage = view.findViewById(R.id.ivProfileImage);
         tvUsername = view.findViewById(R.id.tvUsername);
+        tvEmail = view.findViewById(R.id.tvEmail);
 
         Glide.with(getContext()).load(ParseUser.getCurrentUser().getString("profileImageUri")).apply(RequestOptions.circleCropTransform()).into(ivProfileImage);
 
         tvUsername.setVisibility(View.VISIBLE);
 
         tvUsername.setText(ParseUser.getCurrentUser().getString("name"));
+
+        tvEmail.setText(ParseUser.getCurrentUser().getString("email"));
 
         posts.setOrientation(LinearLayout.HORIZONTAL);
 
