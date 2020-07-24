@@ -1,11 +1,13 @@
 package com.example.fbu_app.ui.home;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -60,6 +62,14 @@ public class HomeFragment extends Fragment {
     PostListFragment listFrag;
     LatLng latlng;
 
+    RelativeLayout layout2;
+    RelativeLayout layout1;
+
+    FragmentManager manager;
+
+    LinearLayout.LayoutParams mapParams;
+    LinearLayout.LayoutParams listParams;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
@@ -70,25 +80,24 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final FragmentManager manager = getFragmentManager();
+        manager = getFragmentManager();
 
 
-        final RelativeLayout layout2 = view.findViewById(R.id.map);
-        final RelativeLayout layout1 = view.findViewById(R.id.list);
+        layout2 = view.findViewById(R.id.map);
+        layout1 = view.findViewById(R.id.list);
 
-        //Button button = view.findViewById(R.id.button);
-        //Button button1 = view.findViewById(R.id.button2);
+        OnSwipeTouchListener onSwipeTouchListener = new OnSwipeTouchListener(getContext(), view.findViewById(R.id.llHome));
 
         int height = Resources.getSystem().getDisplayMetrics().heightPixels;
 
-        LinearLayout.LayoutParams mapParams = new LinearLayout.LayoutParams(layout1.getLayoutParams());
-        LinearLayout.LayoutParams listParams = new LinearLayout.LayoutParams(layout2.getLayoutParams());
+        mapParams = new LinearLayout.LayoutParams(layout1.getLayoutParams());
+        listParams = new LinearLayout.LayoutParams(layout2.getLayoutParams());
 
-        mapParams.weight = 0;
+        //mapParams.weight = 0;
 
         //layout1.setLayoutParams(mapParams);
 
-        listParams.weight = 1;
+        //listParams.weight = 1;
 
         //layout2.setLayoutParams(listParams);
 
@@ -215,5 +224,61 @@ public class HomeFragment extends Fragment {
                 // The user canceled the operation.
             }
         }
+    }
+
+    public static class OnSwipeTouchListener implements View.OnTouchListener {
+        private final GestureDetector gestureDetector;
+        Context context;
+        OnSwipeTouchListener(Context ctx, View mainView) {
+            gestureDetector = new GestureDetector(ctx, new GestureListener());
+            mainView.setOnTouchListener(this);
+            context = ctx;
+        }
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            return gestureDetector.onTouchEvent(event);
+        }
+        public class GestureListener extends
+                GestureDetector.SimpleOnGestureListener {
+            private static final int SWIPE_THRESHOLD = 100;
+            private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+            @Override
+            public boolean onDown(MotionEvent e) {
+                return true;
+            }
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                boolean result = false;
+                try {
+                    float diffY = e2.getY() - e1.getY();
+                    float diffX = e2.getX() - e1.getX();
+                    if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                        if (diffY > 0) {
+                            onSwipeBottom();
+                        } else {
+                            onSwipeTop();
+                        }
+                        result = true;
+                    }
+                }
+                catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+                return result;
+            }
+        }
+        void onSwipeTop() {
+            Toast.makeText(context, "Swiped Up", Toast.LENGTH_SHORT).show();
+            this.onSwipe.swipeTop();
+        }
+        void onSwipeBottom() {
+            Toast.makeText(context, "Swiped Down", Toast.LENGTH_SHORT).show();
+            this.onSwipe.swipeBottom();
+        }
+        interface onSwipeListener {
+            void swipeTop();
+            void swipeBottom();
+        }
+        onSwipeListener onSwipe;
     }
 }

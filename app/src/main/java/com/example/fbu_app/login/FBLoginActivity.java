@@ -71,7 +71,7 @@ public class FBLoginActivity extends AppCompatActivity {
                             currentUser.put("name", Profile.getCurrentProfile().getName());
                             Uri uri = Profile.getCurrentProfile().getProfilePictureUri(100, 100);
                             currentUser.put("profileImageUri", uri.toString());
-                            getInfo(loginResult);
+                            getInfo(loginResult, currentUser);
                         }
                     };
                 }
@@ -117,7 +117,7 @@ public class FBLoginActivity extends AppCompatActivity {
         }).executeAsync();
     }
 
-    public void getInfo(LoginResult loginResult) {
+    public void getInfo(LoginResult loginResult, final ParseUser currUser) {
         GraphRequest request = GraphRequest.newMeRequest(
                 loginResult.getAccessToken(),
                 new GraphRequest.GraphJSONObjectCallback() {
@@ -128,11 +128,11 @@ public class FBLoginActivity extends AppCompatActivity {
                         // Application code
                         try {
                             String email = object.getString("email");
-                            ParseUser.getCurrentUser().put("email", email);
+                            currUser.put("email", email);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        ParseUser.getCurrentUser().saveInBackground();
+                        currUser.saveInBackground();
                     }
                 });
         Bundle parameters = new Bundle();
