@@ -16,6 +16,7 @@ import com.example.fbu_app.MainActivity;
 import com.example.fbu_app.R;
 
 
+import com.google.android.material.button.MaterialButton;
 import com.parse.FindCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -34,7 +35,8 @@ public class LoginActivity extends AppCompatActivity {
 
         final EditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
-        final Button loginButton = findViewById(R.id.login);
+        final MaterialButton loginButton = findViewById(R.id.login);
+        final MaterialButton registerButton = findViewById(R.id.register);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
         if (ParseUser.getCurrentUser() != null) {
@@ -43,6 +45,15 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String username = usernameEditText.getText().toString();
+                String password = passwordEditText.getText().toString();
+                loginUser(username, password);
+            }
+        });
+
+        registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String username = usernameEditText.getText().toString();
