@@ -38,12 +38,13 @@ public class PostMapFragment extends Fragment {
     public HomeFragment homeFrag;
     public LatLng location;
     public String title;
+    public Post post;
 
     public PostMapFragment() {}
 
-    public PostMapFragment(LatLng location, String title) {
+    public PostMapFragment(LatLng location, Post newPost) {
         this.location = location;
-        this.title = title;
+        post = newPost;
     }
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
@@ -67,7 +68,7 @@ public class PostMapFragment extends Fragment {
             //googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
             if (location != null) {
                 //changeFocus(location);
-                placeMarker(location, title);
+                placeMarker(location, post);
                 //changeFocus(location);
                 UiSettings settings = googleMap.getUiSettings();
                 settings.setZoomControlsEnabled(true);
@@ -152,12 +153,10 @@ public class PostMapFragment extends Fragment {
 
             LatLng point = new LatLng(post.getLocation().getLatitude(), post.getLocation().getLongitude());
 
-            Marker marker = googleMap.addMarker(new MarkerOptions().position(point)
-                    .title(post.getTitle()));
+            placeMarker(point, post);
 
             // Animate marker using drop effect
             // --> Call the dropPinEffect method here
-            dropPinEffect(marker);
         }
     }
     protected void loadMap(GoogleMap googleMap2) {
@@ -165,6 +164,14 @@ public class PostMapFragment extends Fragment {
         if (googleMap != null) {
             // Map is ready
             Toast.makeText(getContext(), "Map Fragment was loaded properly!", Toast.LENGTH_SHORT).show();
+            googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    PostDetailDialogFragment newFrag = PostDetailDialogFragment.newInstance((Post) marker.getTag());
+                    newFrag.show(getFragmentManager(), "fragment_post_detail");
+                    return false;
+                }
+            });
         } else {
             Toast.makeText(getContext(), "Error - Map was null!!", Toast.LENGTH_SHORT).show();
         }
@@ -181,11 +188,11 @@ public class PostMapFragment extends Fragment {
         }*/
     }
 
-    public void placeMarker(LatLng latLng, String title) {
+    public void placeMarker(LatLng latLng, Post post) {
         Marker marker = googleMap.addMarker(new MarkerOptions().position(latLng)
-                .title(title));
+                .title(post.getTitle()));
+        marker.setTag(post);
         dropPinEffect(marker);
     }
-
 
 }

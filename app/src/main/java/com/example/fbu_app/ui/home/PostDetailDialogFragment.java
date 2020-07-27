@@ -60,6 +60,7 @@ public class PostDetailDialogFragment extends DialogFragment {
         bundle.putString("title", post.getTitle());
         bundle.putDouble("latitude", post.getLocation().getLatitude());
         bundle.putDouble("longitude", post.getLocation().getLongitude());
+        bundle.putParcelable("post", Parcels.wrap(post));
         bundle.putParcelable("images", Parcels.wrap(post.getImages()));
         bundle.putString("notes", post.getNotes());
         frag.setArguments(bundle);
@@ -88,7 +89,7 @@ public class PostDetailDialogFragment extends DialogFragment {
 
         LatLng latLng = new LatLng(getArguments().getDouble("latitude"), getArguments().getDouble("longitude"));
 
-        PostMapFragment mapFrag = new PostMapFragment(latLng, getArguments().getString("title"));
+        PostMapFragment mapFrag = new PostMapFragment(latLng, (Post) Parcels.unwrap(getArguments().getParcelable("post")));
 
         try {
             imagesFrag = new ImagesFragment(reverseImageType((List<ParseFile>) Parcels.unwrap(getArguments().getParcelable("images"))));
