@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginBottom="50dp"
     tools:context=".ui.dashboard.AddFragment">
 
@@ -11,54 +12,87 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/etTitle"
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="59dp"
-            android:layout_marginEnd="103dp"
-            android:layout_marginStart="97dp"
+            android:layout_marginTop="50dp"
+            android:layout_gravity="center"
             android:ems="10"
-            android:hint="title"
-            android:inputType="textPersonName" />
+            app:startIconDrawable="@drawable/ic_baseline_title_24"
+            android:hint="title">
 
-        <EditText
-            android:id="@+id/etDate"
-            android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/etTitle"
+                android:inputType="text"
+                android:maxLines="1"
+                tools:ignore="DuplicateIds" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/etTitle"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="97dp"
-            android:layout_marginTop="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="50dp"
+            android:layout_gravity="center"
             android:ems="10"
             android:hint="date"
-            android:inputType="date" />
+            app:startIconDrawable="@drawable/ic_baseline_calendar_today_24"
+            >
 
-        <AutoCompleteTextView
-            android:id="@+id/etLocation"
-            android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/etDate"
+                android:inputType="text"
+                android:maxLines="1"
+                tools:ignore="DuplicateIds" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/etDate"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="97dp"
-            android:layout_marginTop="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="50dp"
+            android:layout_gravity="center"
             android:ems="10"
             android:hint="location"
-            android:inputType="textAutoComplete" />
+            app:startIconDrawable="@drawable/ic_baseline_location_on_24"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/etLocation"
+                android:inputType="textAutoComplete"
+                android:maxLines="1"
+                tools:ignore="DuplicateIds" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/etNotes"
-            android:layout_width="wrap_content"
-            android:layout_height="100dp"
-            android:layout_below="@+id/etLocation"
-            android:layout_marginTop="40dp"
-            android:layout_marginStart="97dp"
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="50dp"
+            android:layout_gravity="center"
             android:ems="10"
-            android:gravity="start|top"
-            android:hint="Notes"
-            android:inputType="textMultiLine" />
+            android:hint="notes"
+            app:startIconDrawable="@drawable/ic_baseline_notes_24"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:maxLines="4"
+                tools:ignore="DuplicateIds" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:id="@+id/addStuff"
@@ -70,17 +104,16 @@
             android:layout_marginEnd="0dp"
             android:orientation="horizontal" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSubmit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/addStuff"
             android:layout_centerHorizontal="true"
-            android:layout_marginStart="97dp"
+            android:layout_marginStart="265dp"
             android:layout_marginTop="50dp"
-            android:text="Submit" />
-
-
+            android:text="Submit"
+            app:cornerRadius="10dp" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

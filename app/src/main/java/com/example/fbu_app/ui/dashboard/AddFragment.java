@@ -38,6 +38,8 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseFileUtils;
@@ -59,15 +61,15 @@ import static android.app.Activity.RESULT_OK;
 
 public class AddFragment extends Fragment {
 
-    EditText etTitle;
-    EditText etDate;
-    EditText etNotes;
-    AutoCompleteTextView etLocation;
+    TextInputEditText etTitle;
+    TextInputEditText etDate;
+    TextInputEditText etNotes;
+    TextInputEditText etLocation;
     final Calendar myCalendar = Calendar.getInstance();
     public static final int AUTOCOMPLETE_REQUEST_CODE = 42;
     public static final String TAG = "AddFragment";
     LatLng latlng;
-    Button btnSubmit;
+    MaterialButton btnSubmit;
     Date date;
     public Context newContext = getContext();
     NewPostFragment newPostFrag;
@@ -88,7 +90,7 @@ public class AddFragment extends Fragment {
         newPostFrag = frag;
         manager.beginTransaction().replace(R.id.addStuff, frag, frag.getTag()).commit();
         etTitle = view.findViewById(R.id.etTitle);
-        etDate = (EditText) view.findViewById(R.id.etDate);
+        etDate = view.findViewById(R.id.etDate);
         etDate.setInputType(InputType.TYPE_NULL);
         etLocation = view.findViewById(R.id.etLocation);
         btnSubmit = view.findViewById(R.id.btnSubmit);
