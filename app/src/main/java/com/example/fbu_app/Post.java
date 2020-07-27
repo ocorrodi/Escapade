@@ -26,6 +26,7 @@ public class Post extends ParseObject {
     public static final String KEY_DATE = "date";
     public static final String KEY_IMAGES = "images";
     public static final String KEY_TAGS = "tags";
+    public static final String KEY_PLACE = "place";
 
     public String getTitle() {
         return getString(KEY_TITLE);
@@ -89,5 +90,9 @@ public class Post extends ParseObject {
     public void setNotes(String notes) {
         put(KEY_NOTES, notes);
     }
+
+    public void setPlace(String place) { put(KEY_PLACE, place); }
+
+    public String getPlace() { return getString(KEY_PLACE); }
 
 }

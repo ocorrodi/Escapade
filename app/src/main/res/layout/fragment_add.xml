@@ -98,7 +98,7 @@
 
         <LinearLayout
             android:id="@+id/addStuff"
-            android:layout_width="300dp"
+            android:layout_width="325dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/etNotes"
             android:layout_alignParentEnd="true"

@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem}.
  * TODO: Replace the implementation with code for your data type.
  */
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
@@ -51,12 +50,19 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Post newPost = posts.get(position);
         holder.tvTitle.setText(newPost.getTitle());
-        holder.tvLocation.setText(getAddress(newPost.getLocation().getLatitude(), newPost.getLocation().getLongitude()));
+
         try {
             Glide.with(context).load(newPost.getUser().getParseFile("profileImage").getFile()).apply(RequestOptions.circleCropTransform()).into(holder.ivImage);
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        String place = newPost.getPlace();
+        if (place != null) {
+            holder.tvLocation.setText(place);
+            return;
+        }
+        holder.tvLocation.setText(getAddress(newPost.getLocation().getLatitude(), newPost.getLocation().getLongitude()));
     }
 
     @Override
@@ -101,8 +107,15 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         try {
             List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
             Address obj = addresses.get(0);
-            String add = obj.getAddressLine(0);
-            add = add + "\n" + obj.getCountryName();
+            //String add = obj.getAddressLine(0);
+            String add = "";
+            String locality = obj.getLocality();
+            String admin = obj.getAdminArea();
+            String country = obj.getCountryName();
+            if (locality != null) add += locality + ", ";
+            if (admin != null) add += admin + ", ";
+            if (country != null) add += country;
+            //add = add + "\n" + obj.getCountryName();
  /*           add = add + "\n" + obj.getCountryCode();
             add = add + "\n" + obj.getAdminArea();
             add = add + "\n" + obj.getPostalCode();

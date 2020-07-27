@@ -33,6 +33,8 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.internal.IGoogleMapDelegate;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.AddressComponent;
+import com.google.android.libraries.places.api.model.AddressComponents;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
@@ -76,6 +78,7 @@ public class AddFragment extends Fragment {
     Date date;
     public Context newContext = getContext();
     NewPostFragment newPostFrag;
+    String locationName;
 
     @Nullable
     @Override
@@ -169,9 +172,11 @@ public class AddFragment extends Fragment {
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Place place = Autocomplete.getPlaceFromIntent(data);
+                AddressComponents ac = place.getAddressComponents();
                 Log.i(TAG, "Place: " + place.getName() + ", " + place.getId() + ", " + place.getAddress());
                 Toast.makeText(getContext(), "ID: " + place.getId() + "address:" + place.getAddress() + "Name:" + place.getName() + " latlong: " + place.getLatLng(), Toast.LENGTH_LONG).show();
                 String address = place.getAddress();
+                locationName = address;
                 etLocation.setText(address);
                 latlng = place.getLatLng();
                 // do query with address
@@ -194,6 +199,7 @@ public class AddFragment extends Fragment {
         post.setLocation(location);
         post.setDate(date);
         post.setNotes(etNotes.getText().toString());
+        post.setPlace(locationName);
         List<File> images = newPostFrag.getImages();
         post.setImages(changeImageType(images.subList(0, images.size() - 1)));
         post.saveInBackground(new SaveCallback() {
