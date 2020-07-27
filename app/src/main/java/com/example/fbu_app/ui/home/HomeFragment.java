@@ -62,13 +62,15 @@ public class HomeFragment extends Fragment {
     PostListFragment listFrag;
     LatLng latlng;
 
-    RelativeLayout layout2;
-    RelativeLayout layout1;
+    public LinearLayout layout2;
+    public LinearLayout layout1;
 
-    FragmentManager manager;
+    public FragmentManager manager;
 
-    LinearLayout.LayoutParams mapParams;
-    LinearLayout.LayoutParams listParams;
+    public LinearLayout.LayoutParams mapParams;
+    public LinearLayout.LayoutParams listParams;
+
+    OnSwipeTouchListener listener;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -86,20 +88,20 @@ public class HomeFragment extends Fragment {
         layout2 = view.findViewById(R.id.map);
         layout1 = view.findViewById(R.id.list);
 
-        OnSwipeTouchListener onSwipeTouchListener = new OnSwipeTouchListener(getContext(), view.findViewById(R.id.llHome));
-
-        int height = Resources.getSystem().getDisplayMetrics().heightPixels;
-
         mapParams = new LinearLayout.LayoutParams(layout1.getLayoutParams());
         listParams = new LinearLayout.LayoutParams(layout2.getLayoutParams());
 
-        //mapParams.weight = 0;
+        mapParams.weight = (float) .5;
 
-        //layout1.setLayoutParams(mapParams);
+        layout1.setLayoutParams(mapParams);
 
-        //listParams.weight = 1;
+        listParams.weight = (float) .5;
 
-        //layout2.setLayoutParams(listParams);
+        layout2.setLayoutParams(listParams);
+
+       listener = new OnSwipeTouchListener(getContext(), view.findViewById(R.id.llHome));
+
+        int height = Resources.getSystem().getDisplayMetrics().heightPixels;
 
         mapFrag = new PostMapFragment();
         listFrag = new PostListFragment();
@@ -226,13 +228,34 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    public static class OnSwipeTouchListener implements View.OnTouchListener {
+    public static class OnSwipeTouchListener extends HomeFragment implements View.OnTouchListener {
         private final GestureDetector gestureDetector;
         Context context;
+        View view;
+
+        LinearLayout layout1;
+        LinearLayout layout2;
+
+        LinearLayout.LayoutParams listParams;
+        LinearLayout.LayoutParams mapParams;
+
         OnSwipeTouchListener(Context ctx, View mainView) {
             gestureDetector = new GestureDetector(ctx, new GestureListener());
             mainView.setOnTouchListener(this);
             context = ctx;
+            view = mainView;
+            layout1 = view.findViewById(R.id.map);
+            layout2 = view.findViewById(R.id.list);
+
+            mapParams = new LinearLayout.LayoutParams(layout1.getLayoutParams());
+            listParams = new LinearLayout.LayoutParams(layout2.getLayoutParams());
+
+            mapParams.weight = (float) .5;
+            listParams.weight = (float) .5;
+
+            layout1.setLayoutParams(mapParams);
+
+            layout2.setLayoutParams(listParams);
         }
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -269,16 +292,32 @@ public class HomeFragment extends Fragment {
         }
         void onSwipeTop() {
             Toast.makeText(context, "Swiped Up", Toast.LENGTH_SHORT).show();
+
+            mapParams.weight += .5;
+            listParams.weight -= .5;
+
+            layout1.setLayoutParams(mapParams);
+
+            layout2.setLayoutParams(listParams);
+
             this.onSwipe.swipeTop();
         }
         void onSwipeBottom() {
             Toast.makeText(context, "Swiped Down", Toast.LENGTH_SHORT).show();
+
+            mapParams.weight -= .5;
+            listParams.weight += .5;
+
+            layout1.setLayoutParams(mapParams);
+
+            layout2.setLayoutParams(listParams);
             this.onSwipe.swipeBottom();
         }
+        onSwipeListener onSwipe;
+
         interface onSwipeListener {
             void swipeTop();
             void swipeBottom();
         }
-        onSwipeListener onSwipe;
     }
 }
