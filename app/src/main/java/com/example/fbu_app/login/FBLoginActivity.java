@@ -128,7 +128,7 @@ public class FBLoginActivity extends AppCompatActivity {
                         // Application code
                         try {
                             String email = object.getString("email");
-                            currUser.put("email", email);
+                            currUser.put("email2", email);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

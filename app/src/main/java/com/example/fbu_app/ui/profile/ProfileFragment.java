@@ -63,7 +63,7 @@ public class ProfileFragment extends Fragment {
 
         tvUsername.setText(ParseUser.getCurrentUser().getString("name"));
 
-        tvEmail.setText(ParseUser.getCurrentUser().getString("email"));
+        tvEmail.setText(ParseUser.getCurrentUser().getString("email2"));
 
         posts.setOrientation(LinearLayout.HORIZONTAL);
 
