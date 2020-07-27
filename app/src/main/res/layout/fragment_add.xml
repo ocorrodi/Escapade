@@ -41,6 +41,7 @@
             android:layout_gravity="center"
             android:ems="10"
             android:hint="date"
+            android:id="@+id/etDateLayout"
             app:startIconDrawable="@drawable/ic_baseline_calendar_today_24"
             >
 
@@ -60,6 +61,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="50dp"
             android:layout_gravity="center"
+            android:id="@+id/etLocationLayout"
             android:ems="10"
             android:hint="location"
             app:startIconDrawable="@drawable/ic_baseline_location_on_24"

@@ -40,6 +40,7 @@ import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseFileUtils;
@@ -63,8 +64,10 @@ public class AddFragment extends Fragment {
 
     TextInputEditText etTitle;
     TextInputEditText etDate;
+    TextInputLayout etDateLayout;
     TextInputEditText etNotes;
     TextInputEditText etLocation;
+    TextInputLayout etLocationLayout;
     final Calendar myCalendar = Calendar.getInstance();
     public static final int AUTOCOMPLETE_REQUEST_CODE = 42;
     public static final String TAG = "AddFragment";
@@ -95,39 +98,37 @@ public class AddFragment extends Fragment {
         etLocation = view.findViewById(R.id.etLocation);
         btnSubmit = view.findViewById(R.id.btnSubmit);
         etNotes = view.findViewById(R.id.etNotes);
+        etDateLayout = view.findViewById(R.id.etDateLayout);
+        etLocationLayout = view.findViewById(R.id.etLocationLayout);
 
         // Initialize the SDK
         Places.initialize(getActivity().getApplicationContext(), getResources().getString(R.string.google_maps_key));
 
-        // Create a new PlacesClient instance
-        PlacesClient placesClient = Places.createClient(getContext());
-
-        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                  int dayOfMonth) {
-                // TODO Auto-generated method stub
-                myCalendar.set(Calendar.YEAR, year);
-                myCalendar.set(Calendar.MONTH, monthOfYear);
-                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateLabel();
-            }
-
-        };
-
-        ((EditText) etDate).setOnClickListener(new View.OnClickListener() {
+        (etDate).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
 
-                new DatePickerDialog(getContext(), date, myCalendar
-                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                selectDate();
             }
         });
 
+        etDateLayout.setStartIconOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectDate();
+            }
+        });
+
+
         etLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onSearchCalled();
+            }
+        });
+
+        etLocationLayout.setStartIconOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onSearchCalled();
@@ -219,5 +220,24 @@ public class AddFragment extends Fragment {
             parseFiles.add(file);
         }
         return parseFiles;
+    }
+
+    public void selectDate() {
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel();
+            }
+
+        };
+        new DatePickerDialog(getContext(), date, myCalendar
+                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                myCalendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 }
