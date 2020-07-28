@@ -16,6 +16,7 @@ import com.example.fbu_app.MainActivity;
 import com.example.fbu_app.R;
 
 
+import com.example.fbu_app.User;
 import com.google.android.material.button.MaterialButton;
 import com.parse.FindCallback;
 import com.parse.LogInCallback;
@@ -24,6 +25,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
@@ -66,6 +68,8 @@ public class LoginActivity extends AppCompatActivity {
         ParseUser user = new ParseUser();
         user.setUsername(username);
         user.setPassword(password);
+        List<Object> empty = new ArrayList<>();
+        user.put(User.KEY_LIKES, empty);
         user.signUpInBackground(new SignUpCallback() {
             @Override
             public void done(ParseException e) {

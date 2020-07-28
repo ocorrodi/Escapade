@@ -6,7 +6,7 @@ import com.parse.ParseUser;
 
 import java.util.List;
 
-@ParseClassName("Post")
+@ParseClassName("ParseUser")
 public class User extends ParseUser {
 
     public static final String KEY_USERNAME = "username";
@@ -37,4 +37,6 @@ public class User extends ParseUser {
         likedPosts.remove((Object) post);
         put(KEY_LIKES, likedPosts);
     }
+
+    public void setLikedPosts(List<Object> posts) { put(KEY_LIKES, posts);}
 }

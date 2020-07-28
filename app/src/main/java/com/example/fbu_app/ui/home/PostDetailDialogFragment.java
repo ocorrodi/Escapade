@@ -2,6 +2,7 @@ package com.example.fbu_app.ui.home;
 
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.BounceInterpolator;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -22,6 +24,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentContainer;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.fbu_app.Post;
 import com.example.fbu_app.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -31,6 +35,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.textview.MaterialTextView;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 
@@ -38,19 +43,23 @@ import org.parceler.Parcels;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 public class PostDetailDialogFragment extends DialogFragment {
 
     Button exit;
-    TextView tvTitle;
-    TextView tvLocation;
+    MaterialTextView tvTitle;
+    MaterialTextView tvLocation;
     GoogleMap map;
-    Post post;
+    Post currPost;
     RelativeLayout imageLayout;
-    TextView tvNotes;
+    MaterialTextView tvNotes;
+    MaterialTextView tvDate;
+    ImageView ivProfile;
 
     public PostDetailDialogFragment() {}
 
@@ -63,6 +72,8 @@ public class PostDetailDialogFragment extends DialogFragment {
         bundle.putParcelable("post", Parcels.wrap(post));
         bundle.putParcelable("images", Parcels.wrap(post.getImages()));
         bundle.putString("notes", post.getNotes());
+        bundle.putString("date", post.getDate().toString());
+        bundle.putString("image", post.getUser().getString("profileImageUri"));
         frag.setArguments(bundle);
         return frag;
     }
@@ -86,6 +97,8 @@ public class PostDetailDialogFragment extends DialogFragment {
         tvLocation = view.findViewById(R.id.tvAddress);
         imageLayout = view.findViewById(R.id.rvImages);
         tvNotes = view.findViewById(R.id.tvNotes);
+        tvDate = view.findViewById(R.id.tvDate);
+        ivProfile = view.findViewById(R.id.ivProfile);
 
         ImagesFragment imagesFrag;
 
@@ -115,6 +128,12 @@ public class PostDetailDialogFragment extends DialogFragment {
         tvNotes.setText(getArguments().getString("notes"));
         tvLocation.setText(getAddress(getArguments().getDouble("latitude"), getArguments().getDouble("longitude")));
 
+        String myFormat = "MM/dd/yy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+        tvDate.setText("Date visited: " + sdf.format(((Post) Parcels.unwrap(getArguments().getParcelable("post"))).getDate()));
+
+        Glide.with(getContext()).load(getArguments().getString("image")).apply(RequestOptions.circleCropTransform()).into(ivProfile);
+
         getDialog().setCanceledOnTouchOutside(true);
         getDialog().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
@@ -125,8 +144,13 @@ public class PostDetailDialogFragment extends DialogFragment {
         try {
             List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
             Address obj = addresses.get(0);
-            String add = obj.getAddressLine(0);
-            add = add + "\n" + obj.getCountryName();
+            String add = "";
+            String locality = obj.getLocality();
+            String admin = obj.getAdminArea();
+            String country = obj.getCountryName();
+            if (locality != null) add += locality + ", ";
+            if (admin != null) add += admin + ", ";
+            if (country != null) add += country;
 
             Log.v("IGA", "Address" + add);
 
