@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.BounceInterpolator;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -28,6 +29,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.fbu_app.Post;
 import com.example.fbu_app.R;
+import com.example.fbu_app.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -38,6 +40,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.textview.MaterialTextView;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseUser;
 
 import org.parceler.Parcels;
 
@@ -48,6 +51,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Predicate;
+
+import static com.example.fbu_app.User.KEY_LIKES;
 
 public class PostDetailDialogFragment extends DialogFragment {
 
@@ -60,6 +66,7 @@ public class PostDetailDialogFragment extends DialogFragment {
     MaterialTextView tvNotes;
     MaterialTextView tvDate;
     ImageView ivProfile;
+    ImageButton btnLike;
 
     public PostDetailDialogFragment() {}
 
@@ -99,6 +106,7 @@ public class PostDetailDialogFragment extends DialogFragment {
         tvNotes = view.findViewById(R.id.tvNotes);
         tvDate = view.findViewById(R.id.tvDate);
         ivProfile = view.findViewById(R.id.ivProfile);
+        btnLike = view.findViewById(R.id.btnLike);
 
         ImagesFragment imagesFrag;
 
@@ -123,6 +131,8 @@ public class PostDetailDialogFragment extends DialogFragment {
             }
         });
 
+        currPost = (Post) Parcels.unwrap(getArguments().getParcelable("post"));
+
         String title = getArguments().getString("title");
         tvTitle.setText(title);
         tvNotes.setText(getArguments().getString("notes"));
@@ -130,13 +140,37 @@ public class PostDetailDialogFragment extends DialogFragment {
 
         String myFormat = "MM/dd/yy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-        tvDate.setText("Date visited: " + sdf.format(((Post) Parcels.unwrap(getArguments().getParcelable("post"))).getDate()));
+        tvDate.setText("Date visited: " + sdf.format(currPost.getDate()));
 
         Glide.with(getContext()).load(getArguments().getString("image")).apply(RequestOptions.circleCropTransform()).into(ivProfile);
 
         getDialog().setCanceledOnTouchOutside(true);
         getDialog().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
+        List<Object> likedPosts = getLikedPosts();
+        boolean isIn = isLiked(likedPosts, currPost);
+        if (isIn) {
+            btnLike.setImageResource(R.drawable.ic_baseline_favorite_24);
+        }
+        else {
+            btnLike.setImageResource(R.drawable.ic_baseline_favorite_border_24);
+        }
+
+        btnLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                List<Object> likedPosts = getLikedPosts();
+                boolean isIn = isLiked(likedPosts, currPost);
+                if (!isIn) {
+                    addLikedPost(currPost);
+                    btnLike.setImageResource(R.drawable.ic_baseline_favorite_24);
+                    return;
+                }
+                deleteLikedPost(currPost);
+                btnLike.setImageResource(R.drawable.ic_baseline_favorite_border_24);
+            }
+        });
     }
 
     public String getAddress(double lat, double lng) {
@@ -178,5 +212,40 @@ public class PostDetailDialogFragment extends DialogFragment {
             files.add(file);
         }
         return files;
+    }
+
+    public List<Object> getLikedPosts() { return ParseUser.getCurrentUser().getList(KEY_LIKES); }
+
+    public void addLikedPost(Post post) {
+        List<Object> likedPosts = getLikedPosts();
+        if (likedPosts == null) {
+            likedPosts = new ArrayList<>();
+        }
+        likedPosts.add((Object) post);
+        ParseUser.getCurrentUser().put(KEY_LIKES, likedPosts);
+        ParseUser.getCurrentUser().saveInBackground();
+    }
+
+    public void deleteLikedPost(final Post post) {
+        List<Object> likedPosts = getLikedPosts();
+        likedPosts.remove(indexToRemove(likedPosts, post));
+        ParseUser.getCurrentUser().put(KEY_LIKES, likedPosts);
+        ParseUser.getCurrentUser().saveInBackground();
+    }
+
+    public void setLikedPosts(List<Object> posts) { ParseUser.getCurrentUser().put(KEY_LIKES, posts);}
+
+    public boolean isLiked(List<Object> likedPosts, Post post) {
+        for (Object obj : likedPosts) {
+            if (((Post) obj).getObjectId().equals(post.getObjectId())) return true;
+        }
+        return false;
+    }
+
+    public int indexToRemove(List<Object> likedPosts, Post post) {
+        for (int i = 0; i < likedPosts.size(); i++) {
+            if (((Post) likedPosts.get(i)).getObjectId().equals(post.getObjectId())) return i;
+        }
+        return 0;
     }
 }
