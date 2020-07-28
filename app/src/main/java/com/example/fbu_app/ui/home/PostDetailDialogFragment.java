@@ -79,6 +79,8 @@ public class PostDetailDialogFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
         exit = view.findViewById(R.id.btnExit);
         tvTitle = view.findViewById(R.id.tvItemName);
         tvLocation = view.findViewById(R.id.tvAddress);
