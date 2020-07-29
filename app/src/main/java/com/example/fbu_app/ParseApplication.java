@@ -3,6 +3,7 @@ package com.example.fbu_app;
 import android.app.Application;
 import com.parse.Parse;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -25,6 +26,7 @@ public class ParseApplication extends Application {
         builder.networkInterceptors().add(httpLoggingInterceptor);
 
         ParseObject.registerSubclass(Post.class);
+        //ParseUser.registerSubclass(User.class);
 
         Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId("fbu-finalapp") // should correspond to APP_ID env variable

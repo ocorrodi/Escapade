@@ -1,5 +1,6 @@
 package com.example.fbu_app.ui.home;
 
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.fbu_app.Post;
 import com.example.fbu_app.R;
+import com.google.android.gms.maps.MapFragment;
 import com.parse.ParseException;
 
 import java.io.IOException;
@@ -102,7 +104,20 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             PostDetailDialogFragment newFrag = PostDetailDialogFragment.newInstance(post);
             newFrag.show(manager, "fragment_post_detail");
         }
+
+      /*  public void getMapFrag() {
+
+            MapFragment frag;
+            List<Fragment> frags = manager.getFragments();
+
+            for (int i = 0; i < frags.size(); i++) {
+                if (frags.get(i).getClass() == HomeFragment.class) {
+                    frag = (MapFragment) frags.get(i);
+                }
+            }
+        }*/
     }
+
     public String getAddress(double lat, double lng) {
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
         try {

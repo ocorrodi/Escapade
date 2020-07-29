@@ -17,6 +17,7 @@ import com.example.fbu_app.R;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -62,17 +63,12 @@ public class PostMapFragment extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            LatLng sydney = new LatLng(-34, 151);
             loadMap(googleMap);
-            //googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            //googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
             if (location != null) {
-                //changeFocus(location);
                 placeMarker(location, post);
-                //changeFocus(location);
+                changeFocus(location);
                 UiSettings settings = googleMap.getUiSettings();
                 settings.setZoomControlsEnabled(true);
-                googleMap.animateCamera(CameraUpdateFactory.zoomOut());
             }
         }
 
@@ -179,13 +175,7 @@ public class PostMapFragment extends Fragment {
     }
 
     public void changeFocus(LatLng newLocation) {
-        final LatLngBounds.Builder mapBounds = new LatLngBounds.Builder();
-        mapBounds.include(newLocation);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(mapBounds.build(), 100, 100, 10));
-        //googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, 15));
-        /*for (int i = 0; i < 100; i++) {
-            googleMap.animateCamera(CameraUpdateFactory.zoomOut());
-        }*/
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, 5));
     }
 
     public void placeMarker(LatLng latLng, Post post) {
@@ -194,5 +184,4 @@ public class PostMapFragment extends Fragment {
         marker.setTag(post);
         dropPinEffect(marker);
     }
-
 }
