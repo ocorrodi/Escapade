@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         final MaterialButton registerButton = findViewById(R.id.register);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
-        if (ParseUser.getCurrentUser() != null) {
+        if (ParseUser.getCurrentUser() != null && !(getIntent().hasExtra("loggedOut"))) {
             goFBLogin(); //go to fb login
         }
 

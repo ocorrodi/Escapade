@@ -1,5 +1,7 @@
 package com.example.fbu_app.ui.profile;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,12 +9,25 @@ import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fbu_app.R;
+import com.example.fbu_app.login.FBLoginActivity;
+import com.example.fbu_app.login.LoginActivity;
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.login.LoginManager;
 import com.google.android.material.textview.MaterialTextView;
+import com.parse.ParseUser;
 
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHolder> {
 
-    final String[] titles = {"Profile", "Friends", "Liked Posts", "Logout", "Disconnect from FB", "Settings"};
+    final String[] titles = {"Profile", "Friends", "Liked Posts", "Logout", "Disconnect from FB", "My Posts"};
     final int numItems = 6;
+    Context context;
+
+    public ProfileAdapter(Context context) {
+        this.context = context;
+    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -31,13 +46,76 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         return numItems;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         MaterialTextView mtvTitle;
 
         public ViewHolder(View view) {
             super(view);
             this.mtvTitle = view.findViewById(R.id.mtvTitle);
+            view.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View view) {
+            switch (getAdapterPosition()) {
+                case 3:
+                    logout();
+                    break;
+                case 4:
+                    disconnectFromFacebook();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public void logout() {
+        ParseUser.logOut();
+
+        //logout from FB without going to FB login screen
+        new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/permissions/", null, HttpMethod.DELETE, new GraphRequest
+                .Callback() {
+            @Override
+            public void onCompleted(GraphResponse graphResponse) {
+
+                LoginManager.getInstance().logOut();
+
+            }
+        }).executeAsync();
+
+        goLogin();
+    }
+
+    public void disconnectFromFacebook() {
+
+        if (AccessToken.getCurrentAccessToken() == null) {
+            return; // already logged out
+        }
+
+        new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/permissions/", null, HttpMethod.DELETE, new GraphRequest
+                .Callback() {
+            @Override
+            public void onCompleted(GraphResponse graphResponse) {
+
+                LoginManager.getInstance().logOut();
+                goFBLogin();
+
+            }
+        }).executeAsync();
+    }
+
+    public void goFBLogin() {
+        Intent i = new Intent(this.context, FBLoginActivity.class);
+        this.context.startActivity(i);
+    }
+
+    public void goLogin() {
+        Intent i = new Intent(this.context, LoginActivity.class);
+        i.putExtra("loggedOut", true);
+        this.context.startActivity(i);
     }
 }

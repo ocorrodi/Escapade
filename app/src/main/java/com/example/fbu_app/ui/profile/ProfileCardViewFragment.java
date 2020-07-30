@@ -48,6 +48,6 @@ public class ProfileCardViewFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         rvProfileItems = view.findViewById(R.id.rv_profile);
         rvProfileItems.setLayoutManager(new GridLayoutManager(getContext(), NUM_COLUMNS));
-        rvProfileItems.setAdapter(new ProfileAdapter());
+        rvProfileItems.setAdapter(new ProfileAdapter(getContext()));
     }
 }
