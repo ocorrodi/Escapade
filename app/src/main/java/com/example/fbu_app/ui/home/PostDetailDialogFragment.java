@@ -2,41 +2,29 @@ package com.example.fbu_app.ui.home;
 
 import android.location.Address;
 import android.location.Geocoder;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.BounceInterpolator;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentContainer;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.fbu_app.Post;
 import com.example.fbu_app.R;
 import com.example.fbu_app.User;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.textview.MaterialTextView;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -48,12 +36,8 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.function.Predicate;
-
-import static com.example.fbu_app.User.KEY_LIKES;
 
 public class PostDetailDialogFragment extends DialogFragment {
 
@@ -73,6 +57,7 @@ public class PostDetailDialogFragment extends DialogFragment {
     public static PostDetailDialogFragment newInstance(Post post) {
         PostDetailDialogFragment frag = new PostDetailDialogFragment();
         Bundle bundle = new Bundle();
+        //add fields to be retrieved by dialog fragment
         bundle.putString("title", post.getTitle());
         bundle.putDouble("latitude", post.getLocation().getLatitude());
         bundle.putDouble("longitude", post.getLocation().getLongitude());
@@ -99,19 +84,21 @@ public class PostDetailDialogFragment extends DialogFragment {
 
         getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
-        exit = view.findViewById(R.id.btnExit);
-        tvTitle = view.findViewById(R.id.tvItemName);
-        tvLocation = view.findViewById(R.id.tvAddress);
-        imageLayout = view.findViewById(R.id.rvImages);
-        tvNotes = view.findViewById(R.id.tvNotes);
-        tvDate = view.findViewById(R.id.tvDate);
-        ivProfile = view.findViewById(R.id.ivProfile);
-        btnLike = view.findViewById(R.id.btnLike);
+        this.exit = view.findViewById(R.id.btnExit);
+        this.tvTitle = view.findViewById(R.id.tvItemName);
+        this.tvLocation = view.findViewById(R.id.tvAddress);
+        this.imageLayout = view.findViewById(R.id.rvImages);
+        this.tvNotes = view.findViewById(R.id.tvNotes);
+        this.tvDate = view.findViewById(R.id.tvDate);
+        this.ivProfile = view.findViewById(R.id.ivProfile);
+        this.btnLike = view.findViewById(R.id.btnLike);
 
         ImagesFragment imagesFrag;
 
+        //get location of post in LatLng
         LatLng latLng = new LatLng(getArguments().getDouble("latitude"), getArguments().getDouble("longitude"));
 
+        //initialize map fragment
         PostMapFragment mapFrag = new PostMapFragment(latLng, (Post) Parcels.unwrap(getArguments().getParcelable("post")));
 
         try {
@@ -121,22 +108,25 @@ public class PostDetailDialogFragment extends DialogFragment {
             e.printStackTrace();
         }
 
+        //load map fragment and images recycler view into corresponding layout
         getChildFragmentManager().beginTransaction().replace(R.id.location, mapFrag, mapFrag.getTag()).commit();
         getChildFragmentManager().beginTransaction().replace(R.id.rvImages, imagesFrag, imagesFrag.getTag()).commit();
 
-        exit.setOnClickListener(new View.OnClickListener() {
+        this.exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getDialog().dismiss();
             }
         });
 
-        currPost = (Post) Parcels.unwrap(getArguments().getParcelable("post"));
+        //get current post
+        this.currPost = (Post) Parcels.unwrap(getArguments().getParcelable("post"));
 
+        //set attributes and fields on dialog fragment
         String title = getArguments().getString("title");
-        tvTitle.setText(title);
-        tvNotes.setText(getArguments().getString("notes"));
-        tvLocation.setText(getAddress(getArguments().getDouble("latitude"), getArguments().getDouble("longitude")));
+        this.tvTitle.setText(title);
+        this.tvNotes.setText(getArguments().getString("notes"));
+        this.tvLocation.setText(getAddress(getArguments().getDouble("latitude"), getArguments().getDouble("longitude")));
 
         String myFormat = "MM/dd/yy"; //format for date label
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
@@ -150,10 +140,11 @@ public class PostDetailDialogFragment extends DialogFragment {
 
         List<Object> likedPosts = getLikedPosts();
         boolean isIn = isLiked(likedPosts, currPost);
-        if (isIn) {
+
+        if (isIn) { //post has been liked already
             btnLike.setImageResource(R.drawable.ic_baseline_favorite_24);
         }
-        else {
+        else { //post not liked yet
             btnLike.setImageResource(R.drawable.ic_baseline_favorite_border_24);
         }
 
@@ -173,7 +164,7 @@ public class PostDetailDialogFragment extends DialogFragment {
         });
     }
 
-    public String getAddress(double lat, double lng) {
+    public String getAddress(double lat, double lng) { //get address as a formatted string from latitude and longitude
         Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
@@ -196,15 +187,8 @@ public class PostDetailDialogFragment extends DialogFragment {
             return "";
         }
     }
-    public List<ParseFile> changeImageType(List<File> images) {
-        List<ParseFile> parseFiles = new ArrayList<>();
-        for (File image : images) {
-            ParseFile file = new ParseFile(image);
-            parseFiles.add(file);
-        }
-        return parseFiles;
-    }
 
+    //converts list of parse files to list of files
     public List<File> reverseImageType(List<ParseFile> images) throws ParseException {
         List<File> files = new ArrayList<>();
         for (ParseFile image : images) {
@@ -214,8 +198,10 @@ public class PostDetailDialogFragment extends DialogFragment {
         return files;
     }
 
+    //get posts liked by user
     public List<Object> getLikedPosts() { return ParseUser.getCurrentUser().getList(User.KEY_LIKES); }
 
+    //add post to those liked by user
     public void addLikedPost(Post post) {
         List<Object> likedPosts = getLikedPosts();
         if (likedPosts == null) {
@@ -227,6 +213,7 @@ public class PostDetailDialogFragment extends DialogFragment {
         post.addLike();
     }
 
+    //remove post from those liked by user
     public void deleteLikedPost(final Post post) {
         List<Object> likedPosts = getLikedPosts();
         likedPosts.remove(indexToRemove(likedPosts, post));
@@ -235,8 +222,10 @@ public class PostDetailDialogFragment extends DialogFragment {
         post.removeLike();
     }
 
+    //set the posts liked by a user
     public void setLikedPosts(List<Object> posts) { ParseUser.getCurrentUser().put(User.KEY_LIKES, posts);}
 
+    //returns bool representing whether user has liked post using object ID comparison
     public boolean isLiked(List<Object> likedPosts, Post post) {
         for (Object obj : likedPosts) {
             if (((Post) obj).getObjectId().equals(post.getObjectId())) return true;
@@ -244,6 +233,7 @@ public class PostDetailDialogFragment extends DialogFragment {
         return false;
     }
 
+    //gets index of post to remove using object ID comparison
     public int indexToRemove(List<Object> likedPosts, Post post) {
         for (int i = 0; i < likedPosts.size(); i++) {
             if (((Post) likedPosts.get(i)).getObjectId().equals(post.getObjectId())) return i;

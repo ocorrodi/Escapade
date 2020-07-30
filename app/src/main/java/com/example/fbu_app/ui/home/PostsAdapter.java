@@ -1,13 +1,11 @@
 package com.example.fbu_app.ui.home;
 
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,17 +17,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.fbu_app.Post;
 import com.example.fbu_app.R;
-import com.google.android.gms.maps.MapFragment;
 import com.parse.ParseException;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * TODO: Replace the implementation with code for your data type.
- */
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
 
     private final List<Post> posts;
@@ -85,10 +78,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
         public ViewHolder(View view) {
             super(view);
-            mView = view;
-            tvTitle = view.findViewById(R.id.tvTitle);
-            tvLocation = view.findViewById(R.id.tvAddress);
-            ivImage = view.findViewById(R.id.ivImage);
+            this.mView = view;
+            this.tvTitle = view.findViewById(R.id.tvTitle);
+            this.tvLocation = view.findViewById(R.id.tvAddress);
+            this.ivImage = view.findViewById(R.id.ivImage);
             view.setOnClickListener(this);
         }
 
@@ -104,26 +97,14 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             PostDetailDialogFragment newFrag = PostDetailDialogFragment.newInstance(post);
             newFrag.show(manager, "fragment_post_detail");
         }
-
-      /*  public void getMapFrag() {
-
-            MapFragment frag;
-            List<Fragment> frags = manager.getFragments();
-
-            for (int i = 0; i < frags.size(); i++) {
-                if (frags.get(i).getClass() == HomeFragment.class) {
-                    frag = (MapFragment) frags.get(i);
-                }
-            }
-        }*/
     }
 
+    //returns formatted address string from latitude and longitude of a place
     public String getAddress(double lat, double lng) {
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
             Address obj = addresses.get(0);
-            //String add = obj.getAddressLine(0);
             String add = "";
             String locality = obj.getLocality();
             String admin = obj.getAdminArea();
@@ -131,20 +112,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             if (locality != null) add += locality + ", ";
             if (admin != null) add += admin + ", ";
             if (country != null) add += country;
-            //add = add + "\n" + obj.getCountryName();
- /*           add = add + "\n" + obj.getCountryCode();
-            add = add + "\n" + obj.getAdminArea();
-            add = add + "\n" + obj.getPostalCode();
-            add = add + "\n" + obj.getSubAdminArea();
-            add = add + "\n" + obj.getLocality();
-            add = add + "\n" + obj.getSubThoroughfare();*/
-
-            Log.v("IGA", "Address" + add);
-            // Toast.makeText(this, "Address=>" + add,
-            // Toast.LENGTH_SHORT).show();
-
-            // TennisAppActivity.showDialog(add);
             return add;
+
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

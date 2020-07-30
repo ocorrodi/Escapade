@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import com.example.fbu_app.R;
 
 /**
- * A fragment representing a list of Items.
+ * NOT CURRENTLY USED
  */
 public class ProfilePostFragment extends Fragment {
 

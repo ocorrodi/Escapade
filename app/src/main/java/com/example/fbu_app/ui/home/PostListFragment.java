@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A fragment representing a list of Items.
+ * A fragment representing a list of posts.
  */
 public class PostListFragment extends Fragment {
 
@@ -29,6 +29,7 @@ public class PostListFragment extends Fragment {
     View newView;
     HomeFragment homeFrag;
 
+    //empty constructor
     public PostListFragment() {
     }
 
@@ -52,6 +53,10 @@ public class PostListFragment extends Fragment {
 
         setup();
 
+        /* get access to the Home Fragment for communication about loading posts
+         * Home Fragment serves as main point of contact between PostListFragment and
+         * PostMapFragment for synchronizing the retrieval and display of posts
+         */
         List<Fragment> frags = getParentFragmentManager().getFragments();
 
         for (int i = 0; i < frags.size(); i++) {
@@ -75,6 +80,7 @@ public class PostListFragment extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
+    //method called by HomeFragment to update posts in PostListFragment
     public void setPosts(List<Post> newPosts) {
         if (newPosts.size() > 0) posts.clear();
         posts.addAll(newPosts);

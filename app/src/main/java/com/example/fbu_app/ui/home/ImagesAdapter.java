@@ -7,18 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.fbu_app.R;
-import com.parse.ParseFile;
 
 import java.io.File;
 import java.util.List;
 
-/**
- * TODO: Replace the implementation with code for your data type.
- */
+
 public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder> {
 
 
@@ -26,7 +22,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder
     Context context;
 
     public ImagesAdapter(List<File> items, Context context) {
-        images = items;
+        this.images = items;
         this.context = context;
     }
 
@@ -39,7 +35,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Glide.with(context).load(images.get(position)).into(holder.ivImage);
+        Glide.with(this.context).load(this.images.get(position)).into(holder.ivImage);
     }
 
     @Override
@@ -53,8 +49,8 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder
 
         public ViewHolder(View view) {
             super(view);
-            mView = view;
-            ivImage = view.findViewById(R.id.ivPostImage);
+            this.mView = view;
+            this.ivImage = view.findViewById(R.id.ivPostImage);
         }
     }
 }

@@ -13,7 +13,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -25,11 +24,7 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
-import com.parse.ParseException;
-import com.parse.ParseFile;
 import com.parse.ParseUser;
-
-import java.io.File;
 
 public class ProfileFragment extends Fragment {
 
@@ -51,25 +46,22 @@ public class ProfileFragment extends Fragment {
 
         LinearLayout posts = view.findViewById(R.id.posts);
 
-        ivProfileImage = view.findViewById(R.id.ivProfileImage);
-        tvUsername = view.findViewById(R.id.tvUsername);
-        tvEmail = view.findViewById(R.id.tvEmail);
-        btnLogout = view.findViewById(R.id.btnLogout);
-        btnFB = view.findViewById(R.id.btnFB);
+        this.ivProfileImage = view.findViewById(R.id.ivProfileImage);
+        this.tvUsername = view.findViewById(R.id.tvUsername);
+        this.tvEmail = view.findViewById(R.id.tvEmail);
+        this.btnLogout = view.findViewById(R.id.btnLogout);
+        this.btnFB = view.findViewById(R.id.btnFB);
 
         Glide.with(getContext()).load(ParseUser.getCurrentUser().getString("profileImageUri")).apply(RequestOptions.circleCropTransform()).into(ivProfileImage);
 
-        tvUsername.setVisibility(View.VISIBLE);
+        this.tvUsername.setVisibility(View.VISIBLE);
 
-        tvUsername.setText(ParseUser.getCurrentUser().getString("name"));
+        //get user's profile attributes
+        this.tvUsername.setText(ParseUser.getCurrentUser().getString("name"));
 
-        tvEmail.setText(ParseUser.getCurrentUser().getString("email2"));
+        this.tvEmail.setText(ParseUser.getCurrentUser().getString("email2"));
 
         posts.setOrientation(LinearLayout.HORIZONTAL);
-
-        ProfilePostFragment frag = new ProfilePostFragment();
-
-        FragmentManager manager = getFragmentManager();
 
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,8 +78,6 @@ public class ProfileFragment extends Fragment {
                 disconnectFromFacebook();
             }
         });
-
-        //manager.beginTransaction().replace(R.id.posts, frag, frag.getTag()).commit();
     }
     public void disconnectFromFacebook() {
 

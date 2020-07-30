@@ -9,17 +9,11 @@ import android.widget.TextView;
 
 import com.example.fbu_app.R;
 
-import java.util.List;
 
-/**
- * TODO: Replace the implementation with code for your data type.
+/*
+ * NOT CURRENTLY USED
  */
 public class ProfilePostAdapter extends RecyclerView.Adapter<ProfilePostAdapter.ViewHolder> {
-
-
-    /*public ProfilePostAdapter(List<DummyItem> items) {
-        mValues = items;
-    }*/
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -30,22 +24,17 @@ public class ProfilePostAdapter extends RecyclerView.Adapter<ProfilePostAdapter.
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        /*holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);*/
     }
 
     @Override
     public int getItemCount() {
         return 0;
-        //return mValues.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        //public DummyItem mItem;
 
         public ViewHolder(View view) {
             super(view);

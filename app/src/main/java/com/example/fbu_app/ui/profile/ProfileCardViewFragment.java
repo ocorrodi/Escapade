@@ -10,11 +10,6 @@ import android.view.ViewGroup;
 
 import com.example.fbu_app.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileCardViewFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ProfileCardViewFragment extends Fragment {
 
 
@@ -22,7 +17,6 @@ public class ProfileCardViewFragment extends Fragment {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static ProfileCardViewFragment newInstance(String param1, String param2) {
         ProfileCardViewFragment fragment = new ProfileCardViewFragment();
         Bundle args = new Bundle();

@@ -64,6 +64,7 @@ public class HomeFragment extends Fragment {
     LatLng currLocation;
     final double halfWeight = .5;
     final int numPosts = 10;
+    final int FIVE_MILES_IN_METERS = 8047;
 
     public LinearLayout layout2;
     public LinearLayout layout1;
@@ -195,6 +196,10 @@ public class HomeFragment extends Fragment {
                 double endLong = currLocation.longitude;
                 android.location.Location.distanceBetween(startLat1, startLong1, endLat, endLong, results1);
                 android.location.Location.distanceBetween(startLat2, startLong2, endLat, endLong, results2);
+                if (Math.abs(results1[0] - results2[0]) <= FIVE_MILES_IN_METERS) {
+                    //locations are approximately same distance away (5 mile buffer)
+                    return Integer.compare(post.getLikes(), t1.getLikes());
+                }
                 return Float.compare(results1[0], results2[0]);
             }
         });
@@ -203,16 +208,6 @@ public class HomeFragment extends Fragment {
 
     public void getPosts() {
         queryPosts(false);
-    }
-
-    public void onSearchCalled() {
-        // Set the fields to specify which types of place data to return.
-        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.ADDRESS_COMPONENTS);
-        // Start the autocomplete intent.
-        Intent intent = new Autocomplete.IntentBuilder(
-                AutocompleteActivityMode.OVERLAY, fields)
-                .build(getContext());
-        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
     }
 
     @Override
@@ -328,10 +323,5 @@ public class HomeFragment extends Fragment {
             void swipeTop();
             void swipeBottom();
         }
-    }
-
-    public void hideMap() {
-        FragmentTransaction ft = manager.beginTransaction();
-        ft.hide(mapFrag).commit();
     }
 }

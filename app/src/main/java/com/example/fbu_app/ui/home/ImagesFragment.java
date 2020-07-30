@@ -26,9 +26,7 @@ public class ImagesFragment extends Fragment {
 
     List<File> images;
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 3;
 
     /**
@@ -39,12 +37,10 @@ public class ImagesFragment extends Fragment {
     }
 
     public ImagesFragment(List<File> newImages) {
-        images = new ArrayList<>();
-        images.addAll(newImages);
+        this.images = new ArrayList<>();
+        this.images.addAll(newImages);
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static ImagesFragment newInstance(int columnCount) {
         ImagesFragment fragment = new ImagesFragment();
         Bundle args = new Bundle();

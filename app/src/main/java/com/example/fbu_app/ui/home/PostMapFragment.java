@@ -38,7 +38,6 @@ public class PostMapFragment extends Fragment {
     public GoogleMap googleMap;
     public HomeFragment homeFrag;
     public LatLng location;
-    public String title;
     public Post post;
 
     public PostMapFragment() {}
@@ -49,8 +48,6 @@ public class PostMapFragment extends Fragment {
     }
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
-
-
 
         /**
          * Manipulates the map once available.
@@ -93,6 +90,11 @@ public class PostMapFragment extends Fragment {
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
+
+        /* get access to the Home Fragment for communication about loading posts
+         * Home Fragment serves as main point of contact between PostListFragment and
+         * PostMapFragment for synchronizing the retrieval and display of posts
+         */
         List<Fragment> frags = getParentFragmentManager().getFragments();
 
         for (int i = 0; i < frags.size(); i++) {
@@ -127,7 +129,8 @@ public class PostMapFragment extends Fragment {
 
                 if (t > 0.0) {
                     // Post this event again 15ms from now.
-                    handler.postDelayed(this, 15);
+                    int delay = 15;
+                    handler.postDelayed(this, delay);
                 } else { // done elapsing, show window
                     marker.showInfoWindow();
                 }
@@ -174,12 +177,15 @@ public class PostMapFragment extends Fragment {
         if (homeFrag != null) homeFrag.getPosts();
     }
 
+    //have map's camera focus on a new location
     public void changeFocus(LatLng newLocation) {
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, 5));
+        int zoom = 5;
+        this.googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, zoom));
     }
 
+    //place marker on the map
     public void placeMarker(LatLng latLng, Post post) {
-        Marker marker = googleMap.addMarker(new MarkerOptions().position(latLng)
+        Marker marker = this.googleMap.addMarker(new MarkerOptions().position(latLng)
                 .title(post.getTitle()));
         marker.setTag(post);
         dropPinEffect(marker);
