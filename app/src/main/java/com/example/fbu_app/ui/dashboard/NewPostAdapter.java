@@ -40,8 +40,8 @@ public class NewPostAdapter extends RecyclerView.Adapter<NewPostAdapter.ViewHold
 
 
     public NewPostAdapter(List<File> items, Context context, Fragment fragment) {
-        images = items;
-        newPostContext = context;
+        this.images = items;
+        this.newPostContext = context;
         this.fragment = fragment;
     }
 
@@ -73,14 +73,13 @@ public class NewPostAdapter extends RecyclerView.Adapter<NewPostAdapter.ViewHold
         public File image;
         public final ImageView newImage;
         public Context context;
-        public final String APP_TAG = "MyCustomApp";
         public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
 
         public ViewHolder(View view) {
             super(view);
-            mView = view;
-            context = newPostContext;
-            newImage = (ImageView) view.findViewById(R.id.ivNewImage);
+            this.mView = view;
+            this.context = newPostContext;
+            this.newImage = (ImageView) view.findViewById(R.id.ivNewImage);
             view.setOnClickListener(this);
         }
 
@@ -96,11 +95,9 @@ public class NewPostAdapter extends RecyclerView.Adapter<NewPostAdapter.ViewHold
         protected void launchCamera(File photoFile2) {
             // create Intent to take a picture and return control to the calling application
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            // Create a File reference for future access
 
+            // Create a File reference for future access
             // wrap File object into a content provider
-            // required for API >= 24
-            // See https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
             Uri fileProvider = FileProvider.getUriForFile(context, "com.codepath.FBU_App", photoFile2);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
@@ -118,7 +115,7 @@ public class NewPostAdapter extends RecyclerView.Adapter<NewPostAdapter.ViewHold
             // Get safe storage directory for photos
             // Use `getExternalFilesDir` on Context to access package-specific directories.
             // This way, we don't need to request external read/write runtime permissions.
-            File mediaStorageDir = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "NewPostFragment");
+            File mediaStorageDir = new File(this.context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "NewPostFragment");
 
             // Create the storage directory if it does not exist
             if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){

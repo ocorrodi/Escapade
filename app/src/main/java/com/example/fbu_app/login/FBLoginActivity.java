@@ -41,18 +41,18 @@ public class FBLoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fb_login);
-        //FacebookSdk.sdkInitialize();
         callbackManager = CallbackManager.Factory.create();
 
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
 
+        //already logged in, go directly to home screen
         if (isLoggedIn) {
             goMainActivity();
-            //disconnectFromFacebook();
             return;
         }
 
+        //facebook login button
         loginButton = (LoginButton) findViewById(R.id.login_button);
         loginButton.setReadPermissions(Arrays.asList("public_profile", "user_friends", EMAIL));
 
@@ -60,8 +60,8 @@ public class FBLoginActivity extends AppCompatActivity {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(final LoginResult loginResult) {
-                // App code
-                //LoginManager.getInstance().logInWithReadPermissions(FBLoginActivity.this, Arrays.asList("public_profile", "user_friends"));
+
+                //get user profile
                 if (Profile.getCurrentProfile() == null) {
                     ProfileTracker profileTracker = new ProfileTracker() {
                         @Override
@@ -75,20 +75,23 @@ public class FBLoginActivity extends AppCompatActivity {
                         }
                     };
                 }
+                //go to home screen
                 goMainActivity();
             }
 
             @Override
             public void onCancel() {
-                // App code
+                // TODO: add error handling
             }
 
             @Override
             public void onError(FacebookException exception) {
-                // App code
+                // TODO: add error handling
             }
         });
     }
+
+    //go to home screen
     private void goMainActivity() {
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
@@ -100,6 +103,8 @@ public class FBLoginActivity extends AppCompatActivity {
         callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    //logout user from Facebook
     public void disconnectFromFacebook() {
 
         if (AccessToken.getCurrentAccessToken() == null) {
@@ -117,6 +122,7 @@ public class FBLoginActivity extends AppCompatActivity {
         }).executeAsync();
     }
 
+    //get user info from FB and upload to profile in Parse
     public void getInfo(LoginResult loginResult, final ParseUser currUser) {
         GraphRequest request = GraphRequest.newMeRequest(
                 loginResult.getAccessToken(),

@@ -61,7 +61,9 @@ public class HomeFragment extends Fragment {
     ArrayList<Post> posts;
     PostMapFragment mapFrag;
     PostListFragment listFrag;
-    LatLng latlng;
+    LatLng currLocation;
+    final double halfWeight = .5;
+    final int numPosts = 10;
 
     public LinearLayout layout2;
     public LinearLayout layout1;
@@ -83,35 +85,36 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        manager = getFragmentManager();
+
+        this.manager = getFragmentManager();
 
 
-        layout2 = view.findViewById(R.id.map);
-        layout1 = view.findViewById(R.id.list);
+        this.layout2 = view.findViewById(R.id.map);
+        this.layout1 = view.findViewById(R.id.list);
 
-        mapParams = new LinearLayout.LayoutParams(layout1.getLayoutParams());
-        listParams = new LinearLayout.LayoutParams(layout2.getLayoutParams());
+        //make the two views "split screen"
+        this.mapParams = new LinearLayout.LayoutParams(layout1.getLayoutParams());
+        this.listParams = new LinearLayout.LayoutParams(layout2.getLayoutParams());
 
-        mapParams.weight = (float) .5;
+        this.mapParams.weight = (float) halfWeight;
 
-        layout1.setLayoutParams(mapParams);
+        this.layout1.setLayoutParams(this.mapParams);
 
-        listParams.weight = (float) .5;
+        this.listParams.weight = (float) halfWeight;
 
-        layout2.setLayoutParams(listParams);
+        this.layout2.setLayoutParams(this.listParams);
 
-       listener = new OnSwipeTouchListener(getContext(), view.findViewById(R.id.llHome));
+       this.listener = new OnSwipeTouchListener(getContext(), view.findViewById(R.id.llHome));
 
         int height = Resources.getSystem().getDisplayMetrics().heightPixels;
 
-        mapFrag = new PostMapFragment();
-        listFrag = new PostListFragment();
+        this.mapFrag = new PostMapFragment();
+        this.listFrag = new PostListFragment();
 
         manager.beginTransaction().replace(R.id.map, mapFrag, mapFrag.getTag()).commit();
         manager.beginTransaction().replace(R.id.list, listFrag, listFrag.getTag()).commit();
 
         posts = new ArrayList<>();
-        //queryPosts();
 
         // Initialize the SDK
         Places.initialize(getActivity().getApplicationContext(), getResources().getString(R.string.google_maps_key));
@@ -132,8 +135,8 @@ public class HomeFragment extends Fragment {
             public void onPlaceSelected(@NonNull Place place) {
                 // TODO: Get info about the selected place.
                 Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
-                latlng = place.getLatLng();
-                mapFrag.changeFocus(latlng);
+                currLocation = place.getLatLng();
+                mapFrag.changeFocus(currLocation);
                 queryPosts(true);
             }
 
@@ -146,11 +149,15 @@ public class HomeFragment extends Fragment {
         });
     }
 
+    /* get the posts from Parse
+     * args: boolean whether user is searching for location
+     */
     protected void queryPosts(final boolean isSearch) {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
 
         query.include(Post.KEY_USER);
-        if (!isSearch) query.setLimit(10);
+
+        if (!isSearch) query.setLimit(numPosts);
         query.addDescendingOrder("createdAt");
         query.findInBackground(new FindCallback<Post>() {
             @RequiresApi(api = Build.VERSION_CODES.N)
@@ -166,13 +173,14 @@ public class HomeFragment extends Fragment {
                     sortPosts(posts2);
                 }
                 posts.addAll(posts2);
-                listFrag.setPosts(posts2);
-                mapFrag.setPosts(posts2);
+                listFrag.setPosts(posts2); //pass updated posts to list fragment
+                mapFrag.setPosts(posts2); //pass updated posts to map fragment
             }
         });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
+    //sort the posts according to distance from currLocation
     public void sortPosts(List<Post> posts2) {
         posts2.sort(new Comparator<Post>() {
             @Override
@@ -183,14 +191,14 @@ public class HomeFragment extends Fragment {
                 double startLong1 = post.getLocation().getLongitude();
                 double startLat2 = t1.getLocation().getLatitude();
                 double startLong2 = t1.getLocation().getLongitude();
-                double endLat = latlng.latitude;
-                double endLong = latlng.longitude;
+                double endLat = currLocation.latitude;
+                double endLong = currLocation.longitude;
                 android.location.Location.distanceBetween(startLat1, startLong1, endLat, endLong, results1);
                 android.location.Location.distanceBetween(startLat2, startLong2, endLat, endLong, results2);
                 return Float.compare(results1[0], results2[0]);
             }
         });
-        posts2.subList(0, Math.min(posts2.size(), 20));
+        posts2.subList(0, Math.min(posts2.size(), numPosts));
     }
 
     public void getPosts() {
@@ -216,7 +224,7 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(getContext(), "ID: " + place.getId() + "address:" + place.getAddress() + "Name:" + place.getName() + " latlong: " + place.getLatLng(), Toast.LENGTH_LONG).show();
                 String address = place.getAddress();
                 //searchBar.setText(address);
-                latlng = place.getLatLng();
+                currLocation = place.getLatLng();
 
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // TODO: Handle the error.
@@ -251,8 +259,8 @@ public class HomeFragment extends Fragment {
             mapParams = new LinearLayout.LayoutParams(layout1.getLayoutParams());
             listParams = new LinearLayout.LayoutParams(layout2.getLayoutParams());
 
-            mapParams.weight = (float) .5;
-            listParams.weight = (float) .5;
+            mapParams.weight = (float) halfWeight;
+            listParams.weight = (float) halfWeight;
 
             layout1.setLayoutParams(mapParams);
 
@@ -294,8 +302,8 @@ public class HomeFragment extends Fragment {
         void onSwipeTop() {
             Toast.makeText(context, "Swiped Up", Toast.LENGTH_SHORT).show();
 
-            mapParams.weight += .5;
-            listParams.weight -= .5;
+            mapParams.weight += halfWeight;
+            listParams.weight -= halfWeight;
 
             layout1.setLayoutParams(mapParams);
 
@@ -306,8 +314,8 @@ public class HomeFragment extends Fragment {
         void onSwipeBottom() {
             Toast.makeText(context, "Swiped Down", Toast.LENGTH_SHORT).show();
 
-            mapParams.weight -= .5;
-            listParams.weight += .5;
+            mapParams.weight -= halfWeight;
+            listParams.weight += halfWeight;
 
             layout1.setLayoutParams(mapParams);
 

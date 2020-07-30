@@ -76,7 +76,6 @@ public class AddFragment extends Fragment {
     LatLng latlng;
     MaterialButton btnSubmit;
     Date date;
-    public Context newContext = getContext();
     NewPostFragment newPostFrag;
     String locationName;
 
@@ -91,23 +90,29 @@ public class AddFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         FragmentManager manager = getFragmentManager();
+
         NewPostFragment frag = new NewPostFragment();
-        newPostFrag = frag;
+
+        this.newPostFrag = frag;
+
+        //load the images recycler view into the layout
         manager.beginTransaction().replace(R.id.addStuff, frag, frag.getTag()).commit();
-        etTitle = view.findViewById(R.id.etTitle);
-        etDate = view.findViewById(R.id.etDate);
-        etDate.setInputType(InputType.TYPE_NULL);
-        etLocation = view.findViewById(R.id.etLocation);
-        btnSubmit = view.findViewById(R.id.btnSubmit);
-        etNotes = view.findViewById(R.id.etNotes);
-        etDateLayout = view.findViewById(R.id.etDateLayout);
-        etLocationLayout = view.findViewById(R.id.etLocationLayout);
+
+        this.etTitle = view.findViewById(R.id.etTitle);
+        this.etDate = view.findViewById(R.id.etDate);
+        this.etDate.setInputType(InputType.TYPE_NULL);
+        this.etLocation = view.findViewById(R.id.etLocation);
+        this.btnSubmit = view.findViewById(R.id.btnSubmit);
+        this.etNotes = view.findViewById(R.id.etNotes);
+        this.etDateLayout = view.findViewById(R.id.etDateLayout);
+        this.etLocationLayout = view.findViewById(R.id.etLocationLayout);
 
         // Initialize the SDK
         Places.initialize(getActivity().getApplicationContext(), getResources().getString(R.string.google_maps_key));
 
-        (etDate).setOnClickListener(new View.OnClickListener() {
+        (this.etDate).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
@@ -116,7 +121,7 @@ public class AddFragment extends Fragment {
             }
         });
 
-        etDateLayout.setStartIconOnClickListener(new View.OnClickListener() {
+        this.etDateLayout.setStartIconOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 selectDate();
@@ -124,21 +129,21 @@ public class AddFragment extends Fragment {
         });
 
 
-        etLocation.setOnClickListener(new View.OnClickListener() {
+        this.etLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onSearchCalled();
             }
         });
 
-        etLocationLayout.setStartIconOnClickListener(new View.OnClickListener() {
+        this.etLocationLayout.setStartIconOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onSearchCalled();
             }
         });
 
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
+        this.btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ParseGeoPoint geoPoint = new ParseGeoPoint();
@@ -149,6 +154,7 @@ public class AddFragment extends Fragment {
         });
     }
 
+    //update the date label
     private void updateLabel() {
         String myFormat = "MM/dd/yy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
@@ -157,6 +163,7 @@ public class AddFragment extends Fragment {
         date = myCalendar.getTime();
     }
 
+    //user clicked on search bar
     public void onSearchCalled() {
         // Set the fields to specify which types of place data to return.
         List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.ADDRESS_COMPONENTS);
@@ -176,10 +183,9 @@ public class AddFragment extends Fragment {
                 Log.i(TAG, "Place: " + place.getName() + ", " + place.getId() + ", " + place.getAddress());
                 Toast.makeText(getContext(), "ID: " + place.getId() + "address:" + place.getAddress() + "Name:" + place.getName() + " latlong: " + place.getLatLng(), Toast.LENGTH_LONG).show();
                 String address = place.getAddress();
-                locationName = address;
-                etLocation.setText(address);
-                latlng = place.getLatLng();
-                // do query with address
+                this.locationName = address;
+                this.etLocation.setText(address);
+                this.latlng = place.getLatLng();
 
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // TODO: Handle the error.
@@ -192,16 +198,19 @@ public class AddFragment extends Fragment {
         }
     }
 
+    //save a post into Parse with given attributes
     private void savePost(final String title, ParseUser currentUser, ParseGeoPoint location, Date date) {
         Post post = new Post();
         post.setTitle(title);
         post.setUser(currentUser);
         post.setLocation(location);
         post.setDate(date);
-        post.setNotes(etNotes.getText().toString());
-        post.setPlace(locationName);
-        List<File> images = newPostFrag.getImages();
-        post.setImages(changeImageType(images.subList(0, images.size() - 1)));
+        post.setNotes(this.etNotes.getText().toString());
+        post.setPlace(this.locationName);
+        List<File> images = this.newPostFrag.getImages();
+        int startIndex = 0;
+        int endIndex = images.size() - 1;
+        post.setImages(changeImageType(images.subList(startIndex, endIndex)));
         post.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -219,6 +228,7 @@ public class AddFragment extends Fragment {
         });
     }
 
+    //change list of Files into list of ParseFiles
     public List<ParseFile> changeImageType(List<File> images) {
         List<ParseFile> parseFiles = new ArrayList<>();
         for (File image : images) {
@@ -228,6 +238,7 @@ public class AddFragment extends Fragment {
         return parseFiles;
     }
 
+    //select date from date picker
     public void selectDate() {
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 

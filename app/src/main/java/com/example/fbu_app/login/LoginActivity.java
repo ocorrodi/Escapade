@@ -42,8 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
         if (ParseUser.getCurrentUser() != null) {
-            //goMainActivity();
-            goFBLogin();
+            goFBLogin(); //go to fb login
         }
 
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -64,6 +63,8 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    //sign up user by creating new Parse user with given username and password
     private void signUpUser(String username, String password) {
         ParseUser user = new ParseUser();
         user.setUsername(username);
@@ -84,6 +85,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    //attempt to login user with given username and password
     private void loginUser(String username, String password) {
         ParseUser.logInInBackground(username, password, new LogInCallback() {
             @Override
@@ -98,12 +100,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void goMainActivity() {
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
-        finish();
-    }
-
+    //go to the FB login page
     private void goFBLogin() {
         Intent i = new Intent(this, FBLoginActivity.class);
         startActivity(i);

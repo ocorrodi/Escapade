@@ -37,11 +37,8 @@ public class NewPostFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
-    private int mColumnCount = 1;
     public List<File> images;
     public NewPostAdapter adapter;
-    public final String APP_TAG = "MyCustomApp";
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
     File photoFile;
 
@@ -80,14 +77,15 @@ public class NewPostFragment extends Fragment {
             recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
             Uri uri = resourceToUri(getContext(), R.drawable.ic_baseline_add_photo_alternate_24);
             new File(String.valueOf(uri));
-            images = new ArrayList<File>();
-            adapter = new NewPostAdapter(images, getContext(), this);
+            this.images = new ArrayList<File>();
+            this.adapter = new NewPostAdapter(this.images, getContext(), this);
             recyclerView.setAdapter(adapter);
-            images.add(new File(String.valueOf(uri)));
-            adapter.notifyDataSetChanged();
+            this.images.add(new File(String.valueOf(uri)));
+            this.adapter.notifyDataSetChanged();
         }
         return view;
     }
+
     public static Uri resourceToUri(Context context, int resID) {
         return Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" +
                 context.getResources().getResourcePackageName(resID) + '/' +
@@ -100,9 +98,10 @@ public class NewPostFragment extends Fragment {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 // by this point we have the camera photo on disk
-                photoFile = adapter.getPhotoFile();
-                images.add(0, photoFile);
-                adapter.notifyDataSetChanged();
+                this.photoFile = adapter.getPhotoFile();
+                int startIndex = 0;
+                this.images.add(startIndex, photoFile);
+                this.adapter.notifyDataSetChanged();
             } else { // Result was a failure
                 Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
@@ -114,7 +113,7 @@ public class NewPostFragment extends Fragment {
     }
 
     public void clearImages() {
-        images.clear();
-        adapter.notifyDataSetChanged();
+        this.images.clear();
+        this.adapter.notifyDataSetChanged();
     }
 }
