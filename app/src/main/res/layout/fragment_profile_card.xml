@@ -4,16 +4,21 @@
     android:layout_height="wrap_content"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     card_view:contentPadding="16dp"
-    card_view:cardElevation="2dp"
+    card_view:cardElevation="5dp"
     card_view:cardCornerRadius="5dp"
+    android:layout_marginBottom="8dp"
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="4dp"
+    card_view:cardPreventCornerOverlap="true"
     xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         android:orientation="vertical">
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/mtvTitle"
             style="@style/Base.TextAppearance.AppCompat.Headline"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

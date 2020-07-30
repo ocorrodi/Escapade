@@ -44,7 +44,6 @@ public class PostDetailDialogFragment extends DialogFragment {
     Button exit;
     MaterialTextView tvTitle;
     MaterialTextView tvLocation;
-    GoogleMap map;
     Post currPost;
     RelativeLayout imageLayout;
     MaterialTextView tvNotes;
