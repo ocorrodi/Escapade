@@ -23,7 +23,7 @@ import com.parse.ParseUser;
 
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHolder> {
 
-    final String[] titles = {"Profile", "Friends", "Liked Posts", "Logout", "Disconnect from FB", "My Posts"};
+    final String[] titles = {"My Profile", "Friends", "Liked Posts", "Logout", "Disconnect from FB", "My Posts"};
     final int numItems = 6;
     Context context;
     FragmentManager fragmentManager;
@@ -51,7 +51,6 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
     }
 
 
-
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         MaterialTextView mtvTitle;
@@ -69,7 +68,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
                     fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, new ProfileFragment()).addToBackStack(null).commit();
                     break;
                 case 2:
-                    fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, new PostListFragment()).addToBackStack(null).commit();
+                    fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, new GenericPostListFragment(PostProperty.LIKED)).addToBackStack(null).commit();
                     break;
                 case 3:
                     logout();
@@ -77,6 +76,8 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
                 case 4:
                     disconnectFromFacebook();
                     break;
+                case 5:
+                    fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, new GenericPostListFragment(PostProperty.PERSONAL)).addToBackStack(null).commit();
                 default:
                     break;
             }

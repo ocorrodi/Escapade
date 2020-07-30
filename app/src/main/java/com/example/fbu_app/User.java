@@ -13,6 +13,7 @@ public class User extends ParseUser {
     public static final String KEY_PROFILE_IMAGE = "profileImage";
     public static final String KEY_NAME="name";
     public static final String KEY_LIKES="likedPosts";
+    public static final String KEY_PROFILE_IMAGE_URI = "profileImageUri";
     public static ParseUser user;
 
     public User(ParseUser user) {

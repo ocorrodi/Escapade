@@ -47,11 +47,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         Post newPost = posts.get(position);
         holder.tvTitle.setText(newPost.getTitle());
 
-        try {
-            Glide.with(context).load(newPost.getUser().getParseFile("profileImage").getFile()).apply(RequestOptions.circleCropTransform()).into(holder.ivImage);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        Glide.with(context).load(newPost.getUser().getString("profileImageUri")).apply(RequestOptions.circleCropTransform()).into(holder.ivImage);
 
         String place = newPost.getPlace();
         if (place != null) {
