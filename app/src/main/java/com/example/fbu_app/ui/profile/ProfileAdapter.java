@@ -6,11 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fbu_app.R;
 import com.example.fbu_app.login.FBLoginActivity;
 import com.example.fbu_app.login.LoginActivity;
+import com.example.fbu_app.ui.home.PostListFragment;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
@@ -24,9 +26,11 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
     final String[] titles = {"Profile", "Friends", "Liked Posts", "Logout", "Disconnect from FB", "My Posts"};
     final int numItems = 6;
     Context context;
+    FragmentManager fragmentManager;
 
-    public ProfileAdapter(Context context) {
+    public ProfileAdapter(Context context, FragmentManager manager) {
         this.context = context;
+        this.fragmentManager = manager;
     }
 
     @Override
@@ -61,6 +65,12 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         @Override
         public void onClick(View view) {
             switch (getAdapterPosition()) {
+                case 0:
+                    fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, new ProfileFragment()).addToBackStack(null).commit();
+                    break;
+                case 2:
+                    fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, new PostListFragment()).addToBackStack(null).commit();
+                    break;
                 case 3:
                     logout();
                     break;

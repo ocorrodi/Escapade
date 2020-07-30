@@ -24,10 +24,8 @@ public class ProfileCardViewFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static ProfileCardViewFragment newInstance(String param1, String param2) {
+    public static ProfileCardViewFragment newInstance() {
         ProfileCardViewFragment fragment = new ProfileCardViewFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -48,6 +46,6 @@ public class ProfileCardViewFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         rvProfileItems = view.findViewById(R.id.rv_profile);
         rvProfileItems.setLayoutManager(new GridLayoutManager(getContext(), NUM_COLUMNS));
-        rvProfileItems.setAdapter(new ProfileAdapter(getContext()));
+        rvProfileItems.setAdapter(new ProfileAdapter(getContext(), getFragmentManager()));
     }
 }
