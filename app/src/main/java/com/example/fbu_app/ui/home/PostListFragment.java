@@ -4,20 +4,16 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.fbu_app.Post;
 import com.example.fbu_app.R;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,8 +51,6 @@ public class PostListFragment extends Fragment {
         newView = view;
 
         setup();
-
-        //HomeFragment parent = (HomeFragment) getParentFragment();
 
         List<Fragment> frags = getParentFragmentManager().getFragments();
 

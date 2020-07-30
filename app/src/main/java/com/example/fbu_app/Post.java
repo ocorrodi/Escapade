@@ -27,6 +27,7 @@ public class Post extends ParseObject {
     public static final String KEY_IMAGES = "images";
     public static final String KEY_TAGS = "tags";
     public static final String KEY_PLACE = "place";
+    public static final String KEY_LIKES = "likes";
 
     public String getTitle() {
         return getString(KEY_TITLE);
@@ -94,5 +95,19 @@ public class Post extends ParseObject {
     public void setPlace(String place) { put(KEY_PLACE, place); }
 
     public String getPlace() { return getString(KEY_PLACE); }
+
+    public int getLikes() { return getInt(KEY_LIKES); }
+
+    public void addLike() {
+        put(this.KEY_LIKES, getLikes() + 1);
+        saveInBackground();
+    }
+
+    public void removeLike() {
+        put(this.KEY_LIKES, getLikes() - 1);
+        saveInBackground();
+    }
+
+    public void setLikes(int likes) { put(KEY_LIKES, likes); }
 
 }

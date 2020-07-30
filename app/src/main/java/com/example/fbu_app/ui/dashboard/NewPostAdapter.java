@@ -16,21 +16,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.fbu_app.MainActivity;
+
 import com.example.fbu_app.R;
 
 import java.io.File;
 import java.util.List;
 
-import static android.app.Activity.RESULT_OK;
 
-/**
- * TODO: Replace the implementation with code for your data type.
- */
 public class NewPostAdapter extends RecyclerView.Adapter<NewPostAdapter.ViewHolder> {
 
     private final List<File> images;

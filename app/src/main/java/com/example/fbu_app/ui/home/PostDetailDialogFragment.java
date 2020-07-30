@@ -138,7 +138,7 @@ public class PostDetailDialogFragment extends DialogFragment {
         tvNotes.setText(getArguments().getString("notes"));
         tvLocation.setText(getAddress(getArguments().getDouble("latitude"), getArguments().getDouble("longitude")));
 
-        String myFormat = "MM/dd/yy"; //In which you need put here
+        String myFormat = "MM/dd/yy"; //format for date label
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
         tvDate.setText("Date visited: " + sdf.format(currPost.getDate()));
 
@@ -214,7 +214,7 @@ public class PostDetailDialogFragment extends DialogFragment {
         return files;
     }
 
-    public List<Object> getLikedPosts() { return ParseUser.getCurrentUser().getList(KEY_LIKES); }
+    public List<Object> getLikedPosts() { return ParseUser.getCurrentUser().getList(User.KEY_LIKES); }
 
     public void addLikedPost(Post post) {
         List<Object> likedPosts = getLikedPosts();
@@ -222,18 +222,20 @@ public class PostDetailDialogFragment extends DialogFragment {
             likedPosts = new ArrayList<>();
         }
         likedPosts.add((Object) post);
-        ParseUser.getCurrentUser().put(KEY_LIKES, likedPosts);
+        ParseUser.getCurrentUser().put(User.KEY_LIKES, likedPosts);
         ParseUser.getCurrentUser().saveInBackground();
+        post.addLike();
     }
 
     public void deleteLikedPost(final Post post) {
         List<Object> likedPosts = getLikedPosts();
         likedPosts.remove(indexToRemove(likedPosts, post));
-        ParseUser.getCurrentUser().put(KEY_LIKES, likedPosts);
+        ParseUser.getCurrentUser().put(User.KEY_LIKES, likedPosts);
         ParseUser.getCurrentUser().saveInBackground();
+        post.removeLike();
     }
 
-    public void setLikedPosts(List<Object> posts) { ParseUser.getCurrentUser().put(KEY_LIKES, posts);}
+    public void setLikedPosts(List<Object> posts) { ParseUser.getCurrentUser().put(User.KEY_LIKES, posts);}
 
     public boolean isLiked(List<Object> likedPosts, Post post) {
         for (Object obj : likedPosts) {

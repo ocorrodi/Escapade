@@ -205,6 +205,7 @@ public class AddFragment extends Fragment {
         post.setUser(currentUser);
         post.setLocation(location);
         post.setDate(date);
+        post.setLikes(0); //initialize number of likes to 0
         post.setNotes(this.etNotes.getText().toString());
         post.setPlace(this.locationName);
         List<File> images = this.newPostFrag.getImages();
