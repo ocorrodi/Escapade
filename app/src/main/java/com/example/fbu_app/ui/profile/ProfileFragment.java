@@ -1,14 +1,19 @@
 package com.example.fbu_app.ui.profile;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,13 +31,14 @@ import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.parse.ParseUser;
 
+import java.util.List;
+
 public class ProfileFragment extends Fragment {
 
     public ImageView ivProfileImage;
     public TextView tvUsername;
     public TextView tvEmail;
-    public Button btnLogout;
-    public Button btnFB;
+    public ImageButton ibEmail;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -44,13 +50,11 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        LinearLayout posts = view.findViewById(R.id.posts);
 
         this.ivProfileImage = view.findViewById(R.id.ivProfileImage);
         this.tvUsername = view.findViewById(R.id.tvUsername);
         this.tvEmail = view.findViewById(R.id.tvEmail);
-        this.btnLogout = view.findViewById(R.id.btnLogout);
-        this.btnFB = view.findViewById(R.id.btnFB);
+        this.ibEmail = view.findViewById(R.id.ibEmail);
 
         Glide.with(getContext()).load(ParseUser.getCurrentUser().getString("profileImageUri")).apply(RequestOptions.circleCropTransform()).into(ivProfileImage);
 
@@ -61,26 +65,13 @@ public class ProfileFragment extends Fragment {
 
         this.tvEmail.setText(ParseUser.getCurrentUser().getString("email2"));
 
-        posts.setOrientation(LinearLayout.HORIZONTAL);
-
-        btnFB.setVisibility(View.INVISIBLE);
-        btnLogout.setVisibility(View.INVISIBLE);
-
-        btnLogout.setOnClickListener(new View.OnClickListener() {
+        ibEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ParseUser.logOut();
-                disconnectFromFacebook();
-                goLogin();
+                sendEmail();
             }
         });
 
-        btnFB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                disconnectFromFacebook();
-            }
-        });
     }
     public void disconnectFromFacebook() {
 
@@ -108,5 +99,27 @@ public class ProfileFragment extends Fragment {
     public void goLogin() {
         Intent i = new Intent(getContext(), LoginActivity.class);
         startActivity(i);
+    }
+
+    protected void sendEmail() {
+        String[] TO = {tvEmail.getText().toString()};
+        Intent intent = new Intent(Intent.ACTION_SEND);
+
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_EMAIL, TO);
+        final PackageManager pm = getContext().getPackageManager();
+        final List<ResolveInfo> matches = pm.queryIntentActivities(intent, 0);
+        ResolveInfo best = null;
+        for (final ResolveInfo info : matches)
+            if (info.activityInfo.packageName.endsWith(".gm") ||
+                    info.activityInfo.name.toLowerCase().contains("gmail")) best = info;
+        if (best != null)
+            intent.setClassName(best.activityInfo.packageName, best.activityInfo.name);
+        try {
+            startActivity(Intent.createChooser(intent, "Send mail..."));
+            getActivity().finish();
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(getContext(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
+        }
     }
 }

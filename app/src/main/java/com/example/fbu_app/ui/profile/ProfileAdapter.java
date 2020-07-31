@@ -27,9 +27,9 @@ import com.parse.ParseUser;
 
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHolder> {
 
-    final String[] titles = {"My Profile", "My Posts", "Liked Posts", "Logout", "Facebook Logout", "Settings"};
+    final String[] titles = {"My Profile", "My Posts", "Liked Posts", "Logout", "Settings", "Facebook Logout"};
     final int[] icons = {R.drawable.profile_white, R.drawable.myposts_white, R.drawable.likedposts_white,
-            R.drawable.exit_white, R.drawable.com_facebook_button_icon, R.drawable.settings_white};
+            R.drawable.exit_white, R.drawable.settings_white, R.drawable.com_facebook_button_icon};
     final String[] colors = {"#F94144", "#F3722C", "#F9C74F", "#90BE6D", "#43AA8B", "#577590"};
     final int numItems = 6;
     Context context;

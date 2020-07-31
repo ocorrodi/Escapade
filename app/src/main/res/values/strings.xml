@@ -2,7 +2,7 @@
     <string name="app_name">FBU_App</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Compose</string>
-    <string name="title_notifications">Profile</string>
+    <string name="title_notifications">More</string>
     <string name="facebook_app_id">1034944743575211</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"

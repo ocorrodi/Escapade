@@ -32,13 +32,14 @@
     <TextView
         android:id="@+id/tvAddress"
         android:layout_width="268dp"
-        android:layout_height="53dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="false"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="34dp"
         android:layout_marginTop="59dp"
         android:layout_marginEnd="9dp"
+        android:drawableStart="@drawable/ic_baseline_location_on_24"
         android:layout_toEndOf="@+id/ivImage"
         android:text="TextView" />
 
