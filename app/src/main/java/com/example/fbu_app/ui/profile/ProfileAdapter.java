@@ -23,7 +23,7 @@ import com.parse.ParseUser;
 
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHolder> {
 
-    final String[] titles = {"My Profile", "Friends", "Liked Posts", "Logout", "Disconnect from FB", "My Posts"};
+    final String[] titles = {"My Profile", "My Posts", "Liked Posts", "Logout", "Disconnect from Facebook", "Settings"};
     final int numItems = 6;
     Context context;
     FragmentManager fragmentManager;
@@ -76,8 +76,9 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
                 case 4:
                     disconnectFromFacebook();
                     break;
-                case 5:
+                case 1:
                     fragmentManager.beginTransaction().replace(R.id.nav_host_fragment, new GenericPostListFragment(PostProperty.PERSONAL)).addToBackStack(null).commit();
+                    break;
                 default:
                     break;
             }
