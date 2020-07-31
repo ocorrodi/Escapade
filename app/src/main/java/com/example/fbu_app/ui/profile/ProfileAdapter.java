@@ -2,9 +2,12 @@ package com.example.fbu_app.ui.profile;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,12 +21,16 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.textview.MaterialTextView;
 import com.parse.ParseUser;
 
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHolder> {
 
-    final String[] titles = {"My Profile", "My Posts", "Liked Posts", "Logout", "Disconnect from Facebook", "Settings"};
+    final String[] titles = {"My Profile", "My Posts", "Liked Posts", "Logout", "Facebook Logout", "Settings"};
+    final int[] icons = {R.drawable.profile_white, R.drawable.myposts_white, R.drawable.likedposts_white,
+            R.drawable.exit_white, R.drawable.com_facebook_button_icon, R.drawable.settings_white};
+    final String[] colors = {"#F94144", "#F3722C", "#F9C74F", "#90BE6D", "#43AA8B", "#577590"};
     final int numItems = 6;
     Context context;
     FragmentManager fragmentManager;
@@ -43,6 +50,9 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mtvTitle.setText(titles[position]);
+        holder.icon.setImageResource(icons[position]);
+        holder.card.setCardBackgroundColor(Color.parseColor(colors[position]));
+        //holder.card.setCardBackgroundColor(Color.parseColor("#F94144"));
     }
 
     @Override
@@ -54,10 +64,14 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         MaterialTextView mtvTitle;
+        ImageView icon;
+        MaterialCardView card;
 
         public ViewHolder(View view) {
             super(view);
             this.mtvTitle = view.findViewById(R.id.mtvTitle);
+            this.icon = view.findViewById(R.id.ivIcon);
+            this.card = view.findViewById(R.id.mcvCards);
             view.setOnClickListener(this);
         }
 
@@ -73,7 +87,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
                 case 3:
                     logout();
                     break;
-                case 4:
+                case 5:
                     disconnectFromFacebook();
                     break;
                 case 1:
