@@ -63,6 +63,9 @@ public class ProfileFragment extends Fragment {
 
         posts.setOrientation(LinearLayout.HORIZONTAL);
 
+        btnFB.setVisibility(View.INVISIBLE);
+        btnLogout.setVisibility(View.INVISIBLE);
+
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
