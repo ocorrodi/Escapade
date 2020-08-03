@@ -158,6 +158,8 @@ public class HomeFragment extends Fragment {
 
         query.include(Post.KEY_USER);
 
+        query.setLimit(1);
+
         if (!isSearch) query.setLimit(numPosts);
         query.addDescendingOrder("createdAt");
         query.findInBackground(new FindCallback<Post>() {
@@ -166,9 +168,11 @@ public class HomeFragment extends Fragment {
             public void done(List<Post> posts2, ParseException e) {
                 if (e != null) {
                     Log.e(TAG, "issue with getting posts");
+                    Toast.makeText(getContext(), "error getting posts", Toast.LENGTH_LONG).show();
                 }
                 for (Post post : posts2) {
                     Log.i(TAG, "Post: " + post.getTitle() + " username: " + post.getUser().getUsername());
+                   //Toast.makeText(getContext(), "success with posts", Toast.LENGTH_LONG).show();
                 }
                 if (isSearch) {
                     sortPosts(posts2);

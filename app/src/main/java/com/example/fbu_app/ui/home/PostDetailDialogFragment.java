@@ -23,6 +23,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.fbu_app.Post;
 import com.example.fbu_app.R;
 import com.example.fbu_app.User;
+import com.example.fbu_app.ui.profile.ProfileFragment;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.textview.MaterialTextView;
@@ -48,7 +49,7 @@ public class PostDetailDialogFragment extends DialogFragment {
     RelativeLayout imageLayout;
     MaterialTextView tvNotes;
     MaterialTextView tvDate;
-    ImageView ivProfile;
+    ImageButton ivProfile;
     ImageButton btnLike;
 
     public PostDetailDialogFragment() {}
@@ -65,6 +66,7 @@ public class PostDetailDialogFragment extends DialogFragment {
         bundle.putString("notes", post.getNotes());
         bundle.putString("date", post.getDate().toString());
         bundle.putString("image", post.getUser().getString("profileImageUri"));
+        bundle.putParcelable("user", Parcels.wrap(post.getUser()));
         frag.setArguments(bundle);
         return frag;
     }
@@ -132,6 +134,15 @@ public class PostDetailDialogFragment extends DialogFragment {
         tvDate.setText("Date visited: " + sdf.format(currPost.getDate()));
 
         Glide.with(getContext()).load(getArguments().getString("image")).apply(RequestOptions.circleCropTransform()).into(ivProfile);
+
+        ivProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ParseUser user = Parcels.unwrap(getArguments().getParcelable("user"));
+                getDialog().dismiss();
+                getFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new ProfileFragment(user)).addToBackStack(null).commit();
+            }
+        });
 
         getDialog().setCanceledOnTouchOutside(true);
         getDialog().getWindow().setSoftInputMode(

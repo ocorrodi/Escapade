@@ -39,6 +39,15 @@ public class ProfileFragment extends Fragment {
     public TextView tvUsername;
     public TextView tvEmail;
     public ImageButton ibEmail;
+    public ParseUser parseUser;
+
+    public ProfileFragment(ParseUser user) {
+        this.parseUser = user;
+    }
+
+    public ProfileFragment() {
+        this.parseUser = ParseUser.getCurrentUser();
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -55,15 +64,16 @@ public class ProfileFragment extends Fragment {
         this.tvUsername = view.findViewById(R.id.tvUsername);
         this.tvEmail = view.findViewById(R.id.tvEmail);
         this.ibEmail = view.findViewById(R.id.ibEmail);
+        this.parseUser = ParseUser.getCurrentUser();
 
-        Glide.with(getContext()).load(ParseUser.getCurrentUser().getString("profileImageUri")).apply(RequestOptions.circleCropTransform()).into(ivProfileImage);
+        Glide.with(getContext()).load(parseUser.getString("profileImageUri")).apply(RequestOptions.circleCropTransform()).into(ivProfileImage);
 
         this.tvUsername.setVisibility(View.VISIBLE);
 
         //get user's profile attributes
-        this.tvUsername.setText(ParseUser.getCurrentUser().getString("name"));
+        this.tvUsername.setText(parseUser.getString("name"));
 
-        this.tvEmail.setText(ParseUser.getCurrentUser().getString("email2"));
+        this.tvEmail.setText(parseUser.getString("email2"));
 
         ibEmail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,20 +113,20 @@ public class ProfileFragment extends Fragment {
 
     protected void sendEmail() {
         String[] TO = {tvEmail.getText().toString()};
-        Intent intent = new Intent(Intent.ACTION_SEND);
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
 
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_EMAIL, TO);
+        emailIntent.setType("text/plain");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
         final PackageManager pm = getContext().getPackageManager();
-        final List<ResolveInfo> matches = pm.queryIntentActivities(intent, 0);
+        final List<ResolveInfo> matches = pm.queryIntentActivities(emailIntent, 0);
         ResolveInfo best = null;
         for (final ResolveInfo info : matches)
             if (info.activityInfo.packageName.endsWith(".gm") ||
                     info.activityInfo.name.toLowerCase().contains("gmail")) best = info;
         if (best != null)
-            intent.setClassName(best.activityInfo.packageName, best.activityInfo.name);
+            emailIntent.setClassName(best.activityInfo.packageName, best.activityInfo.name);
         try {
-            startActivity(Intent.createChooser(intent, "Send mail..."));
+            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
             getActivity().finish();
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(getContext(), "There is no email client installed.", Toast.LENGTH_SHORT).show();
