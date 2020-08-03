@@ -37,6 +37,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.fbu_app.Post;
 import com.example.fbu_app.R;
+import com.example.fbu_app.User;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
@@ -388,5 +389,21 @@ public class HomeFragment extends Fragment {
     public ArrayList<ParseUser> queryUsers() {
 
         return new ArrayList<>();
+    }
+
+    protected void queryUsers(final ArrayList<ParseUser> currUsers) {
+        ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
+
+        query.findInBackground(new FindCallback<ParseUser>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void done(List<ParseUser> users, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "issue with getting posts");
+                    Toast.makeText(getContext(), "error getting posts", Toast.LENGTH_LONG).show();
+                }
+                currUsers.addAll(users);
+            }
+        });
     }
 }
