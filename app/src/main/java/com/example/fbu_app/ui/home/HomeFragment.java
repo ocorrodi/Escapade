@@ -57,8 +57,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -359,10 +362,9 @@ public class HomeFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        FilterFragment filterFrag = FilterFragment.newInstance(queryUsers(), getCountries());
-        filterFrag.show(getFragmentManager(), TAG);
-
-        return super.onOptionsItemSelected(item);
+        final ArrayList<ParseUser> users = new ArrayList<>();
+        queryUsers();
+        return true;
     }
 
     public ArrayList<String> getCountries() {
@@ -371,7 +373,7 @@ public class HomeFragment extends Fragment {
             String name = getCountry(post.getLocation().getLatitude(), post.getLocation().getLongitude());
             countries.add(name);
         }
-        return countries;
+        return new ArrayList(new HashSet(countries)); //remove duplicates
     }
 
     public String getCountry(double lat, double lng) { //get address as a formatted string from latitude and longitude
@@ -386,12 +388,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    public ArrayList<ParseUser> queryUsers() {
-
-        return new ArrayList<>();
-    }
-
-    protected void queryUsers(final ArrayList<ParseUser> currUsers) {
+    public void queryUsers() {
         ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
 
         query.findInBackground(new FindCallback<ParseUser>() {
@@ -402,8 +399,14 @@ public class HomeFragment extends Fragment {
                     Log.e(TAG, "issue with getting posts");
                     Toast.makeText(getContext(), "error getting posts", Toast.LENGTH_LONG).show();
                 }
-                currUsers.addAll(users);
+                showFilterFrag(users);
             }
         });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void showFilterFrag(List<ParseUser> users) {
+        FilterFragment filterFrag = FilterFragment.newInstance((ArrayList<ParseUser>) users, getCountries());
+        filterFrag.show(getFragmentManager(), TAG);
     }
 }

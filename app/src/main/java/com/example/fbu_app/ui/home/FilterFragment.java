@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.example.fbu_app.R;
@@ -23,6 +24,7 @@ import org.parceler.Parcels;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -67,6 +69,7 @@ public class FilterFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Material_Light_Dialog_Alert);
         if (getArguments() != null) {
         }
     }
@@ -88,6 +91,11 @@ public class FilterFragment extends DialogFragment {
 
         int spinnerLayout = R.layout.spinner_item;
 
+        this.users = new ArrayList<>();
+
+        unwrapUsers(getArguments().getParcelableArrayList("users"));
+        this.countries = getArguments().getStringArrayList("countries");
+
         mapUsers();
 
         this.usersAdapter = new ArrayAdapter<>(getContext(), spinnerLayout, userNames);
@@ -97,11 +105,21 @@ public class FilterFragment extends DialogFragment {
         this.user.setAdapter(usersAdapter);
         this.country.setAdapter(countriesAdapter);
         this.sort.setAdapter(sortAdapter);
+
+        getDialog().getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
     }
 
     public void mapUsers() {
+        userNames = new ArrayList<>();
         for (ParseUser user : users) {
             userNames.add(user.getString("name"));
+        }
+        userNames = new ArrayList(new HashSet(userNames)); //remove duplicates
+    }
+
+    public void unwrapUsers(ArrayList<Parcelable> wrappedUsers) {
+        for (Parcelable user : wrappedUsers) {
+            users.add((ParseUser) Parcels.unwrap(user));
         }
     }
 }
