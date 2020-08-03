@@ -3,12 +3,17 @@ package com.example.fbu_app.ui.home;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,11 +50,14 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -75,6 +83,12 @@ public class HomeFragment extends Fragment {
     public LinearLayout.LayoutParams listParams;
 
     OnSwipeTouchListener listener;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -105,7 +119,7 @@ public class HomeFragment extends Fragment {
 
         this.layout2.setLayoutParams(this.listParams);
 
-       this.listener = new OnSwipeTouchListener(getContext(), view.findViewById(R.id.llHome));
+        this.listener = new OnSwipeTouchListener(getContext(), view.findViewById(R.id.llHome));
 
         int height = Resources.getSystem().getDisplayMetrics().heightPixels;
 
@@ -172,7 +186,7 @@ public class HomeFragment extends Fragment {
                 }
                 for (Post post : posts2) {
                     Log.i(TAG, "Post: " + post.getTitle() + " username: " + post.getUser().getUsername());
-                   //Toast.makeText(getContext(), "success with posts", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getContext(), "success with posts", Toast.LENGTH_LONG).show();
                 }
                 if (isSearch) {
                     sortPosts(posts2);
@@ -265,18 +279,22 @@ public class HomeFragment extends Fragment {
 
             layout2.setLayoutParams(listParams);
         }
+
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             return gestureDetector.onTouchEvent(event);
         }
+
         public class GestureListener extends
                 GestureDetector.SimpleOnGestureListener {
             private static final int SWIPE_THRESHOLD = 100;
             private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+
             @Override
             public boolean onDown(MotionEvent e) {
                 return true;
             }
+
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
                 boolean result = false;
@@ -291,13 +309,13 @@ public class HomeFragment extends Fragment {
                         }
                         result = true;
                     }
-                }
-                catch (Exception exception) {
+                } catch (Exception exception) {
                     exception.printStackTrace();
                 }
                 return result;
             }
         }
+
         void onSwipeTop() {
             Toast.makeText(context, "Swiped Up", Toast.LENGTH_SHORT).show();
 
@@ -310,6 +328,7 @@ public class HomeFragment extends Fragment {
 
             this.onSwipe.swipeTop();
         }
+
         void onSwipeBottom() {
             Toast.makeText(context, "Swiped Down", Toast.LENGTH_SHORT).show();
 
@@ -321,11 +340,53 @@ public class HomeFragment extends Fragment {
             layout2.setLayoutParams(listParams);
             this.onSwipe.swipeBottom();
         }
+
         onSwipeListener onSwipe;
 
         interface onSwipeListener {
             void swipeTop();
+
             void swipeBottom();
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.filter_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        FilterFragment filterFrag = FilterFragment.newInstance(queryUsers(), getCountries());
+        filterFrag.show(getFragmentManager(), TAG);
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public ArrayList<String> getCountries() {
+        ArrayList<String> countries = new ArrayList<>();
+        for (Post post : posts) {
+            String name = getCountry(post.getLocation().getLatitude(), post.getLocation().getLongitude());
+            countries.add(name);
+        }
+        return countries;
+    }
+
+    public String getCountry(double lat, double lng) { //get address as a formatted string from latitude and longitude
+        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
+            Address obj = addresses.get(0);
+            String country = obj.getCountryName();
+            return country;
+        } catch (IOException e) {
+            return "";
+        }
+    }
+
+    public ArrayList<ParseUser> queryUsers() {
+
+        return new ArrayList<>();
     }
 }

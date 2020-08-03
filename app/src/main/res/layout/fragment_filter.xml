@@ -18,21 +18,19 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_marginTop="20dp"
-        android:prompt="User"></Spinner>
+       ></Spinner>
 
     <Spinner
         android:id="@+id/country"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_marginTop="20dp"
-        android:prompt="Country"></Spinner>
+        android:layout_marginTop="20dp"></Spinner>
 
     <Spinner
         android:id="@+id/sort"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_marginTop="20dp"
-        android:prompt="Sort by"></Spinner>
+        android:layout_marginTop="20dp"></Spinner>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnApply"

@@ -7,15 +7,19 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
 import com.example.fbu_app.R;
 import com.google.android.material.button.MaterialButton;
 import com.parse.ParseUser;
+
+import org.parceler.Parcels;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -47,9 +51,16 @@ public class FilterFragment extends DialogFragment {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static FilterFragment newInstance(ArrayList<ParseUser> parseUsers, ArrayList<String> countries) {
         FilterFragment fragment = new FilterFragment();
+        Bundle bundle = new Bundle();
+        ArrayList<Parcelable> wrappedUsers = new ArrayList<>();
+        for (ParseUser user : parseUsers) {
+            wrappedUsers.add(Parcels.wrap(user));
+        }
+        bundle.putStringArrayList("countries", countries);
+        bundle.putParcelableArrayList("users", wrappedUsers);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -92,6 +103,5 @@ public class FilterFragment extends DialogFragment {
         for (ParseUser user : users) {
             userNames.add(user.getString("name"));
         }
-        userNames.add(0, "all");
     }
 }
