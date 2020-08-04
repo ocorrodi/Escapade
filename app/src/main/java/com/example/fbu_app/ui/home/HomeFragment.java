@@ -425,14 +425,14 @@ public class HomeFragment extends Fragment {
 
         query.include(Post.KEY_USER);
 
-        query.whereEqualTo("userName", user);
-        query.whereEqualTo("country", countryName);
+        if (user != "Any") query.whereEqualTo("userName", user);
+        if (countryName != "Any") query.whereEqualTo("country", countryName);
 
-        if (sortParam == "Most recent") {
-            query.addDescendingOrder("createdAt");
+        if (sortParam != "Most recent" && sortParam != "None") {
+            query.addAscendingOrder("likes");
         }
         else {
-            query.addAscendingOrder("likes");
+            query.addDescendingOrder("createdAt");
         }
 
         query.findInBackground(new FindCallback<Post>() {

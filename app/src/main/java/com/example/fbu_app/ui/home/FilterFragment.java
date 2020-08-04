@@ -43,7 +43,7 @@ public class FilterFragment extends DialogFragment {
     ArrayList<ParseUser> users;
     ArrayList<String> userNames;
     ArrayList<String> countries;
-    String[] sortParams = {"Most recent", "Most likes"};
+    String[] sortParams = {"None", "Most recent", "Most likes"};
 
     String currCountry;
     String currUserName;
@@ -106,6 +106,10 @@ public class FilterFragment extends DialogFragment {
         this.usersAdapter = new ArrayAdapter<>(getContext(), spinnerLayout, userNames);
         this.countriesAdapter = new ArrayAdapter<>(getContext(), spinnerLayout, countries);
         this.sortAdapter = new ArrayAdapter<>(getContext(), spinnerLayout, sortParams);
+
+        this.countries.add(0, "Any");
+
+        this.userNames.add(0, "Any");
 
         this.user.setAdapter(usersAdapter);
         this.country.setAdapter(countriesAdapter);

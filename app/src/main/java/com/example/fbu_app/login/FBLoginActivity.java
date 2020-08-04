@@ -71,7 +71,7 @@ public class FBLoginActivity extends AppCompatActivity {
                             currentUser.put("name", Profile.getCurrentProfile().getName());
                             Uri uri = Profile.getCurrentProfile().getProfilePictureUri(100, 100);
                             currentUser.put("profileImageUri", uri.toString());
-                            getInfo(loginResult, currentUser);
+                            getFBFriends(loginResult, currentUser);
                         }
                     };
                 }
@@ -120,6 +120,22 @@ public class FBLoginActivity extends AppCompatActivity {
 
             }
         }).executeAsync();
+    }
+
+    public void getFBFriends(final LoginResult loginResult, final ParseUser currUser) {
+        /* make the API call */
+        new GraphRequest(
+                loginResult.getAccessToken(),
+                "/me/friends",
+                null,
+                HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+                        /* handle the result */
+                        getInfo(loginResult, currUser);
+                    }
+                }
+        ).executeAsync();
     }
 
     //get user info from FB and upload to profile in Parse
