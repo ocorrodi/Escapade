@@ -417,26 +417,7 @@ public class HomeFragment extends Fragment {
     public void startFilter(String countryName, String userName, String sortParam) {
         this.filterCountry = countryName;
         this.sortParam = sortParam;
-        queryUserByName(userName);
-    }
-
-    public void queryUserByName(final String name) {
-        ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
-
-        query.whereEqualTo("name", name);
-
-        query.findInBackground(new FindCallback<ParseUser>() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void done(List<ParseUser> users, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "issue with getting posts");
-                    Toast.makeText(getContext(), "error getting posts", Toast.LENGTH_LONG).show();
-                }
-                filterUser = users.get(0);
-                queryPostsWithParams(name, filterCountry, sortParam);
-            }
-        });
+        queryPostsWithParams(userName, filterCountry, sortParam);
     }
 
     protected void queryPostsWithParams(String user, String countryName, String sortParam) {
@@ -466,6 +447,7 @@ public class HomeFragment extends Fragment {
                     Log.i(TAG, "Post: " + post.getTitle() + " username: " + post.getUser().getUsername());
                     //Toast.makeText(getContext(), "success with posts", Toast.LENGTH_LONG).show();
                 }
+                if (posts2 == null || posts2.size() == 0) posts.clear();
                 posts.addAll(posts2);
                 listFrag.setPosts(posts2); //pass updated posts to list fragment
                 mapFrag.setPosts(posts2); //pass updated posts to map fragment

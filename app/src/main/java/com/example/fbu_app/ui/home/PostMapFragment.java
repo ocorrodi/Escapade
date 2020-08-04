@@ -138,7 +138,7 @@ public class PostMapFragment extends Fragment {
         });
     }
     public void setPosts(List<Post> newPosts) {
-        if (newPosts.size() > 0) posts.clear();
+        if (newPosts.size() >= 0) posts.clear();
         posts.addAll(newPosts);
         if (googleMap != null) {
             updateMap();
@@ -148,6 +148,7 @@ public class PostMapFragment extends Fragment {
     }
 
     private void updateMap() {
+        googleMap.clear();
         for (Post post : posts) {
 
             LatLng point = new LatLng(post.getLocation().getLatitude(), post.getLocation().getLongitude());

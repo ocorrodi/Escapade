@@ -82,7 +82,7 @@ public class PostListFragment extends Fragment {
 
     //method called by HomeFragment to update posts in PostListFragment
     public void setPosts(List<Post> newPosts) {
-        if (newPosts.size() > 0) posts.clear();
+        if (newPosts.size() >= 0) posts.clear();
         posts.addAll(newPosts);
         adapter.notifyDataSetChanged();
     }
