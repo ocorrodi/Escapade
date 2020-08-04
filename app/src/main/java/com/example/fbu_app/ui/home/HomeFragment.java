@@ -88,6 +88,10 @@ public class HomeFragment extends Fragment {
 
     OnSwipeTouchListener listener;
 
+    public ParseUser filterUser;
+    public String filterCountry;
+    public String sortParam;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -408,5 +412,64 @@ public class HomeFragment extends Fragment {
     public void showFilterFrag(List<ParseUser> users) {
         FilterFragment filterFrag = FilterFragment.newInstance((ArrayList<ParseUser>) users, getCountries());
         filterFrag.show(getFragmentManager(), TAG);
+    }
+
+    public void startFilter(String countryName, String userName, String sortParam) {
+        this.filterCountry = countryName;
+        this.sortParam = sortParam;
+        queryUserByName(userName);
+    }
+
+    public void queryUserByName(final String name) {
+        ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
+
+        query.whereEqualTo("name", name);
+
+        query.findInBackground(new FindCallback<ParseUser>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void done(List<ParseUser> users, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "issue with getting posts");
+                    Toast.makeText(getContext(), "error getting posts", Toast.LENGTH_LONG).show();
+                }
+                filterUser = users.get(0);
+                queryPostsWithParams(name, filterCountry, sortParam);
+            }
+        });
+    }
+
+    protected void queryPostsWithParams(String user, String countryName, String sortParam) {
+        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
+
+        query.include(Post.KEY_USER);
+
+        query.whereEqualTo("userName", user);
+        query.whereEqualTo("country", countryName);
+
+        if (sortParam == "Most recent") {
+            query.addDescendingOrder("createdAt");
+        }
+        else {
+            query.addAscendingOrder("likes");
+        }
+
+        query.findInBackground(new FindCallback<Post>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void done(List<Post> posts2, ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "issue with getting posts");
+                    Toast.makeText(getContext(), "error getting posts", Toast.LENGTH_LONG).show();
+                }
+                for (Post post : posts2) {
+                    Log.i(TAG, "Post: " + post.getTitle() + " username: " + post.getUser().getUsername());
+                    //Toast.makeText(getContext(), "success with posts", Toast.LENGTH_LONG).show();
+                }
+                posts.addAll(posts2);
+                listFrag.setPosts(posts2); //pass updated posts to list fragment
+                mapFrag.setPosts(posts2); //pass updated posts to map fragment
+            }
+        });
     }
 }

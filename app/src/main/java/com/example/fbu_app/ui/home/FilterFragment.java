@@ -11,6 +11,7 @@ import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -43,6 +44,10 @@ public class FilterFragment extends DialogFragment {
     ArrayList<String> userNames;
     ArrayList<String> countries;
     String[] sortParams = {"Most recent", "Most likes"};
+
+    String currCountry;
+    String currUserName;
+    String currSortParam;
 
     ArrayAdapter usersAdapter;
     ArrayAdapter countriesAdapter;
@@ -107,6 +112,21 @@ public class FilterFragment extends DialogFragment {
         this.sort.setAdapter(sortAdapter);
 
         getDialog().getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+
+        btnApply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currCountry = countries.get(country.getSelectedItemPosition());
+                currSortParam = sortParams[sort.getSelectedItemPosition()];
+                currUserName = userNames.get(user.getSelectedItemPosition());
+
+                HomeFragment homeFragment = getHomeFragment();
+
+                homeFragment.startFilter(currCountry, currUserName, currSortParam);
+
+                getDialog().dismiss();
+            }
+        });
     }
 
     public void mapUsers() {
@@ -122,4 +142,17 @@ public class FilterFragment extends DialogFragment {
             users.add((ParseUser) Parcels.unwrap(user));
         }
     }
+
+    public HomeFragment getHomeFragment() {
+        List<Fragment> frags = getFragmentManager().getFragments();
+
+        for (int i = 0; i < frags.size(); i++) {
+            if (frags.get(i).getClass() == HomeFragment.class) {
+                return (HomeFragment) frags.get(i);
+            }
+        }
+        return null;
+    }
+
+
 }

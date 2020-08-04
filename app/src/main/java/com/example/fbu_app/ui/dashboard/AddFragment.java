@@ -3,6 +3,8 @@ package com.example.fbu_app.ui.dashboard;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -51,6 +53,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -78,6 +81,7 @@ public class AddFragment extends Fragment {
     Date date;
     NewPostFragment newPostFrag;
     String locationName;
+    String country;
 
     @Nullable
     @Override
@@ -187,6 +191,7 @@ public class AddFragment extends Fragment {
                 this.etLocation.setText(address);
                 this.latlng = place.getLatLng();
 
+
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // TODO: Handle the error.
                 Status status = Autocomplete.getStatusFromIntent(data);
@@ -208,6 +213,7 @@ public class AddFragment extends Fragment {
         post.setLikes(0); //initialize number of likes to 0
         post.setNotes(this.etNotes.getText().toString());
         post.setPlace(this.locationName);
+        post.setCountry(getCountry(location.getLatitude(), location.getLongitude()));
         List<File> images = this.newPostFrag.getImages();
         int startIndex = 0;
         int endIndex = images.size() - 1;
@@ -257,5 +263,17 @@ public class AddFragment extends Fragment {
         new DatePickerDialog(getContext(), date, myCalendar
                 .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                 myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    public String getCountry(double lat, double lng) { //get address as a formatted string from latitude and longitude
+        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
+            Address obj = addresses.get(0);
+            String country = obj.getCountryName();
+            return country;
+        } catch (IOException e) {
+            return "";
+        }
     }
 }

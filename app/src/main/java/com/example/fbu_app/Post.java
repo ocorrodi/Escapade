@@ -28,6 +28,8 @@ public class Post extends ParseObject {
     public static final String KEY_TAGS = "tags";
     public static final String KEY_PLACE = "place";
     public static final String KEY_LIKES = "likes";
+    public static final String KEY_COUNTRY = "country";
+    public static final String KEY_USER_NAME = "userName";
 
     public String getTitle() {
         return getString(KEY_TITLE);
@@ -53,6 +55,8 @@ public class Post extends ParseObject {
         return getDate(KEY_DATE);
     }
 
+    public String getUserName() { return getString(KEY_USER_NAME); }
+
     public List<ParseFile> getImages() {
         return getList(KEY_IMAGES);
     }
@@ -60,9 +64,12 @@ public class Post extends ParseObject {
     public List<String> getTags() {
         return getList(KEY_TAGS);
     }
+
     public void setUser(ParseUser user) {
         put(KEY_USER, user);
     }
+
+    public void setUserName(String name) { put(KEY_USER_NAME, name); }
 
     public void setTitle(String title) {
         put(KEY_TITLE, title);
@@ -75,6 +82,8 @@ public class Post extends ParseObject {
     public void setDate(Date date) {
         put(KEY_DATE, date);
     }
+
+    public void setCountry(String country) { put(KEY_COUNTRY, country); }
 
     public void setImages(List<ParseFile> images) {
         put(KEY_IMAGES, images);
@@ -95,6 +104,8 @@ public class Post extends ParseObject {
     public void setPlace(String place) { put(KEY_PLACE, place); }
 
     public String getPlace() { return getString(KEY_PLACE); }
+
+    public String getCountry() { return getString(KEY_COUNTRY); }
 
     public int getLikes() { return getInt(KEY_LIKES); }
 
