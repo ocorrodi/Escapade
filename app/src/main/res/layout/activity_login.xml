@@ -12,43 +12,68 @@
     android:orientation="vertical"
     tools:context=".login.LoginActivity">
 
-    <EditText
-        android:id="@+id/username"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="300dp"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="30dp"
         android:layout_gravity="center"
-        android:layout_marginTop="50dp"
-        android:hint="username"
-        android:inputType="textEmailAddress"
-        android:selectAllOnFocus="true" />
+        android:id="@+id/usernameLayout"
+        app:errorEnabled="true"
+        android:hint="username">
 
-    <EditText
-        android:id="@+id/password"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textSize="16dp"
+            tools:ignore="DuplicateIds" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="300dp"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        app:errorEnabled="true"
+        android:layout_marginTop="20dp"
         android:layout_gravity="center"
-        android:layout_marginTop="25dp"
-        android:hint="@string/prompt_password"
-        android:imeActionLabel="@string/action_sign_in_short"
-        android:imeOptions="actionDone"
-        android:inputType="textPassword"
-        android:selectAllOnFocus="true" />
+        app:endIconMode="password_toggle"
+        android:id="@+id/passwordLayout"
+        android:hint="password">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textSize="16dp"
+            tools:ignore="DuplicateIds" />
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/register"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
         android:layout_gravity="center"
         android:layout_marginTop="50dp"
-        android:gravity="center"
+        android:backgroundTint="@color/colorAccent"
         android:enabled="true"
+        android:gravity="center"
+        android:shadowColor="@color/colorAccent"
         android:text="Register"
         app:cornerRadius="10dp" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
         android:layout_gravity="center"
         android:layout_marginTop="25dp"
         android:enabled="true"

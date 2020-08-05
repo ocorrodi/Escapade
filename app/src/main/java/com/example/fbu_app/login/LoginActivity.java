@@ -1,8 +1,10 @@
 package com.example.fbu_app.login;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
@@ -18,6 +20,9 @@ import com.example.fbu_app.R;
 
 import com.example.fbu_app.User;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.textview.MaterialTextView;
 import com.parse.FindCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -28,18 +33,30 @@ import com.parse.SignUpCallback;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.ContentValues.TAG;
+
 public class LoginActivity extends AppCompatActivity {
+
+    TextInputEditText usernameEditText;
+    TextInputEditText passwordEditText;
+    MaterialButton loginButton;
+    MaterialButton registerButton;
+    ProgressBar loadingProgressBar;
+    TextInputLayout usernameLayout;
+    TextInputLayout passwordLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        final EditText usernameEditText = findViewById(R.id.username);
-        final EditText passwordEditText = findViewById(R.id.password);
-        final MaterialButton loginButton = findViewById(R.id.login);
-        final MaterialButton registerButton = findViewById(R.id.register);
-        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
+        usernameEditText = findViewById(R.id.username);
+        passwordEditText = findViewById(R.id.password);
+        loginButton = findViewById(R.id.login);
+        registerButton = findViewById(R.id.register);
+        loadingProgressBar = findViewById(R.id.loading);
+        usernameLayout = findViewById(R.id.usernameLayout);
+        passwordLayout = findViewById(R.id.passwordLayout);
 
         if (ParseUser.getCurrentUser() != null && !(getIntent().hasExtra("loggedOut"))) {
             goFBLogin(); //go to fb login
@@ -59,7 +76,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
-                signUpUser(username, password);
+                if (!checkPasswordSignup()) return;
+                usernameInUse(username);
             }
         });
     }
@@ -76,10 +94,10 @@ public class LoginActivity extends AppCompatActivity {
             public void done(ParseException e) {
                 if (e != null) {
                     Log.e("LoginActivity", "error signing up" + e.toString());
-                    Toast.makeText(LoginActivity.this, "error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "error with signup", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Toast.makeText(LoginActivity.this, "sign up successful", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(LoginActivity.this, "sign up successful", Toast.LENGTH_SHORT).show();
                 goFBLogin();
             }
         });
@@ -92,9 +110,12 @@ public class LoginActivity extends AppCompatActivity {
             public void done(ParseUser user, ParseException e) {
                 if (e != null) {
                     Log.e("LoginActivity", "issue with login");
+                    passwordLayout.setError("Password does not match username");
                     return;
                 }
-                Toast.makeText(LoginActivity.this, "success", Toast.LENGTH_LONG).show();
+                usernameLayout.setError(null);
+                passwordLayout.setError(null);
+                //Toast.makeText(LoginActivity.this, "success", Toast.LENGTH_LONG).show();
                 goFBLogin();
             }
         });
@@ -106,4 +127,34 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(i);
         finish();
     }
+
+    public void usernameInUse(final String username) {
+        ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
+
+        query.whereEqualTo("username", username);
+
+        query.findInBackground(new FindCallback<ParseUser>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void done(List<ParseUser> users, ParseException e) {
+                if (e != null || users.size() > 0) {
+                    usernameLayout.setError("Username is already in use");
+                    return;
+                }
+                usernameLayout.setError(null);
+                signUpUser(username, passwordEditText.getText().toString());
+            }
+        });
+    }
+
+    public boolean checkPasswordSignup() {
+        String password = passwordEditText.getText().toString();
+        if (password.length() < 6) {
+            passwordLayout.setError("Password must be at least 6 characters");
+            return false;
+        }
+        usernameLayout.setError(null);
+        return true;
+    }
+
 }

@@ -64,7 +64,7 @@ public class ProfileFragment extends Fragment {
         this.tvUsername = view.findViewById(R.id.tvUsername);
         this.tvEmail = view.findViewById(R.id.tvEmail);
         this.ibEmail = view.findViewById(R.id.ibEmail);
-        this.parseUser = ParseUser.getCurrentUser();
+        //this.parseUser = ParseUser.getCurrentUser();
 
         Glide.with(getContext()).load(parseUser.getString("profileImageUri")).apply(RequestOptions.circleCropTransform()).into(ivProfileImage);
 

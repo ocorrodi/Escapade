@@ -425,11 +425,12 @@ public class HomeFragment extends Fragment {
 
         query.include(Post.KEY_USER);
 
+
         if (user != "Any") query.whereEqualTo("userName", user);
         if (countryName != "Any") query.whereEqualTo("country", countryName);
 
         if (sortParam != "Most recent" && sortParam != "None") {
-            query.addAscendingOrder("likes");
+            query.addDescendingOrder("likes");
         }
         else {
             query.addDescendingOrder("createdAt");
