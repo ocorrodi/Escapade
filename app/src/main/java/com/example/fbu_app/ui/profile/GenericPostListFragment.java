@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -19,6 +20,7 @@ import com.example.fbu_app.R;
 import com.example.fbu_app.User;
 import com.example.fbu_app.ui.home.PostsAdapter;
 import com.parse.FindCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -84,6 +86,9 @@ public class GenericPostListFragment extends Fragment {
             default:
                 break;
         }
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(rvPosts);
     }
 
     protected void queryPosts() {
@@ -134,4 +139,28 @@ public class GenericPostListFragment extends Fragment {
         });
         return user;
     }
+
+    ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT | ItemTouchHelper.DOWN | ItemTouchHelper.UP) {
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+            //Remove swiped item from list and notify the RecyclerView
+            int position = viewHolder.getAdapterPosition();
+
+            Post postToDelete = posts.get(position);
+
+            posts.remove(position);
+
+            postToDelete.deleteInBackground();
+
+            postToDelete.saveInBackground();
+
+            adapter.notifyDataSetChanged();
+        }
+    };
 }
