@@ -81,7 +81,16 @@ public class AddFragment extends Fragment {
     Date date;
     NewPostFragment newPostFrag;
     String locationName;
+    LatLng locationToAdd;
     String country;
+
+    public AddFragment() {
+        this.locationToAdd = null;
+    }
+
+    public AddFragment(LatLng location) {
+        this.locationToAdd = location;
+    }
 
     @Nullable
     @Override
@@ -112,6 +121,10 @@ public class AddFragment extends Fragment {
         this.etNotes = view.findViewById(R.id.etNotes);
         this.etDateLayout = view.findViewById(R.id.etDateLayout);
         this.etLocationLayout = view.findViewById(R.id.etLocationLayout);
+
+        if (locationToAdd != null) {
+            etLocation.setText(getAddress(locationToAdd.latitude, locationToAdd.longitude));
+        }
 
         // Initialize the SDK
         Places.initialize(getActivity().getApplicationContext(), getResources().getString(R.string.google_maps_key));
@@ -273,6 +286,28 @@ public class AddFragment extends Fragment {
             String country = obj.getCountryName();
             return country;
         } catch (IOException e) {
+            return "";
+        }
+    }
+
+    //returns formatted address string from latitude and longitude of a place
+    public String getAddress(double lat, double lng) {
+        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(lat, lng, 1);
+            Address obj = addresses.get(0);
+            String add = "";
+            String locality = obj.getLocality();
+            String admin = obj.getAdminArea();
+            String country = obj.getCountryName();
+            if (locality != null) add += locality + ", ";
+            if (admin != null) add += admin + ", ";
+            if (country != null) add += country;
+            return add;
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
             return "";
         }
     }

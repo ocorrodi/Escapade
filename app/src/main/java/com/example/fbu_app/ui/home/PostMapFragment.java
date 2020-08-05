@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import com.example.fbu_app.Post;
 import com.example.fbu_app.R;
+import com.example.fbu_app.ui.dashboard.AddFragment;
+import com.example.fbu_app.ui.profile.ProfileFragment;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,7 +34,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostMapFragment extends Fragment {
+public class PostMapFragment extends Fragment implements GoogleMap.OnMapLongClickListener {
 
     public List<Post> posts;
     public GoogleMap googleMap;
@@ -176,6 +178,7 @@ public class PostMapFragment extends Fragment {
             Toast.makeText(getContext(), "Error - Map was null!!", Toast.LENGTH_SHORT).show();
         }
         if (homeFrag != null) homeFrag.getPosts();
+        googleMap.setOnMapLongClickListener(this);
     }
 
     //have map's camera focus on a new location
@@ -190,5 +193,11 @@ public class PostMapFragment extends Fragment {
                 .title(post.getTitle()));
         marker.setTag(post);
         dropPinEffect(marker);
+    }
+
+
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+        getFragmentManager().beginTransaction().replace(R.id.nav_host_fragment, new AddFragment(latLng)).addToBackStack(null).commit();
     }
 }
