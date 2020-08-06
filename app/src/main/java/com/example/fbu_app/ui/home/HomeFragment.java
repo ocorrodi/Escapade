@@ -192,6 +192,7 @@ public class HomeFragment extends Fragment {
                     Log.e(TAG, "issue with getting posts");
                     Toast.makeText(getContext(), "error getting posts", Toast.LENGTH_LONG).show();
                 }
+                if (posts2 == null) return;
                 for (Post post : posts2) {
                     Log.i(TAG, "Post: " + post.getTitle() + " username: " + post.getUser().getUsername());
                     //Toast.makeText(getContext(), "success with posts", Toast.LENGTH_LONG).show();

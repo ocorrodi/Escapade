@@ -2,6 +2,7 @@ package com.example.fbu_app.ui.profile;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.fbu_app.MainActivity;
 import com.example.fbu_app.R;
 import com.example.fbu_app.login.FBLoginActivity;
 import com.example.fbu_app.login.LoginActivity;
@@ -127,7 +129,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
             @Override
             public void onCompleted(GraphResponse graphResponse) {
 
-                LoginManager.getInstance().logOut();
+                //LoginManager.getInstance().logOut();
                 goFBLogin();
 
             }
@@ -136,6 +138,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
 
     public void goFBLogin() {
         Intent i = new Intent(this.context, FBLoginActivity.class);
+        i.putExtra("loggedOut", 1);
         this.context.startActivity(i);
     }
 

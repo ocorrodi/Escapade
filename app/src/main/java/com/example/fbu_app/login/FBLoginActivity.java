@@ -3,8 +3,14 @@ package com.example.fbu_app.login;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.net.Uri;
 import android.os.Bundle;
+import android.se.omapi.Session;
+import android.util.Base64;
 import android.util.Log;
 
 import com.example.fbu_app.MainActivity;
@@ -29,6 +35,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 public class FBLoginActivity extends AppCompatActivity {
@@ -44,12 +52,26 @@ public class FBLoginActivity extends AppCompatActivity {
         callbackManager = CallbackManager.Factory.create();
 
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
+        boolean isLoggedIn = accessToken != null && !accessToken.isExpired() && !(getIntent().hasExtra("loggedOut"));
 
         //already logged in, go directly to home screen
         if (isLoggedIn) {
             goMainActivity();
+            //disconnectFromFacebook();
             return;
+        }
+
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
 
         //facebook login button
@@ -77,7 +99,7 @@ public class FBLoginActivity extends AppCompatActivity {
                 }
                 //go to home screen
                 goMainActivity();
-            }
+        }
 
             @Override
             public void onCancel() {
@@ -116,7 +138,15 @@ public class FBLoginActivity extends AppCompatActivity {
             @Override
             public void onCompleted(GraphResponse graphResponse) {
 
+                SharedPreferences pref = FBLoginActivity.this.getPreferences(getApplicationContext().MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+                editor.clear();
+                editor.commit();
                 LoginManager.getInstance().logOut();
+
+                Intent logoutint = new Intent(FBLoginActivity.this,MainActivity.class);
+                logoutint.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(logoutint);
 
             }
         }).executeAsync();
@@ -124,15 +154,27 @@ public class FBLoginActivity extends AppCompatActivity {
 
     public void getFBFriends(final LoginResult loginResult, final ParseUser currUser) {
         /* make the API call */
-        new GraphRequest(
+        /*new GraphRequest(
                 loginResult.getAccessToken(),
                 "/me/friends",
                 null,
                 HttpMethod.GET,
                 new GraphRequest.Callback() {
                     public void onCompleted(GraphResponse response) {
-                        /* handle the result */
+                        // handle the result
                         getInfo(loginResult, currUser);
+                    }
+                }
+        ).executeAsync();*/
+        /* make the API call */
+        new GraphRequest(
+                AccessToken.getCurrentAccessToken(),
+                "/1209023602780989/friends/10222504049730876",
+                null,
+                HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+                        /* handle the result */
                     }
                 }
         ).executeAsync();
