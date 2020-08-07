@@ -3,6 +3,7 @@ package com.example.fbu_app.ui.dashboard;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -23,7 +24,13 @@ import android.widget.Toast;
 
 import com.example.fbu_app.R;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileFilter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +47,7 @@ public class NewPostFragment extends Fragment {
     public List<File> images;
     public NewPostAdapter adapter;
     public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
+    public final static int UPLOAD_IMAGE_ACTIVITY_REQUEST_CODE = 1035;
     File photoFile;
 
     /**
@@ -102,7 +110,32 @@ public class NewPostFragment extends Fragment {
                 int startIndex = 0;
                 this.images.add(startIndex, photoFile);
                 this.adapter.notifyDataSetChanged();
-            } else { // Result was a failure
+            }
+            else if (requestCode == UPLOAD_IMAGE_ACTIVITY_REQUEST_CODE) {
+                if (requestCode == RESULT_OK) {
+                    Uri image = data.getData();
+                    Bitmap bitmap = null;
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), image);
+                        int startIndex = 0;
+
+                        File file = new File("path");
+                        OutputStream os = new BufferedOutputStream(new FileOutputStream(file));
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+                        os.close();
+
+                        images.add(0, file);
+                        this.adapter.notifyDataSetChanged();
+                    } catch (FileNotFoundException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+            }
+            else { // Result was a failure
                 Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
         }

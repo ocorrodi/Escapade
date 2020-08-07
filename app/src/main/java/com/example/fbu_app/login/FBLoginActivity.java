@@ -51,7 +51,7 @@ public class FBLoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_fb_login);
         callbackManager = CallbackManager.Factory.create();
 
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        final AccessToken accessToken = AccessToken.getCurrentAccessToken();
         boolean isLoggedIn = accessToken != null && !accessToken.isExpired() && !(getIntent().hasExtra("loggedOut"));
 
         //already logged in, go directly to home screen
@@ -154,7 +154,7 @@ public class FBLoginActivity extends AppCompatActivity {
 
     public void getFBFriends(final LoginResult loginResult, final ParseUser currUser) {
         /* make the API call */
-        /*new GraphRequest(
+        new GraphRequest(
                 loginResult.getAccessToken(),
                 "/me/friends",
                 null,
@@ -165,7 +165,7 @@ public class FBLoginActivity extends AppCompatActivity {
                         getInfo(loginResult, currUser);
                     }
                 }
-        ).executeAsync();*/
+        ).executeAsync();
         /* make the API call */
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(),

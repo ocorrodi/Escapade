@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,6 +21,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 
 import com.example.fbu_app.R;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
 import java.util.List;
@@ -68,6 +70,7 @@ public class NewPostAdapter extends RecyclerView.Adapter<NewPostAdapter.ViewHold
         public final ImageView newImage;
         public Context context;
         public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
+        public final static int UPLOAD_IMAGE_ACTIVITY_REQUEST_CODE = 1035;
 
         public ViewHolder(View view) {
             super(view);
@@ -81,9 +84,7 @@ public class NewPostAdapter extends RecyclerView.Adapter<NewPostAdapter.ViewHold
         public void onClick(View view) {
             int position = getAdapterPosition();
             if (position != (images.size() - 1)) return;
-            String photoFileName = "photo.jpg";
-            photoFile = getPhotoFileUri(photoFileName);
-            launchCamera(photoFile);
+            selectImage();
         }
 
         protected void launchCamera(File photoFile2) {
@@ -102,6 +103,32 @@ public class NewPostAdapter extends RecyclerView.Adapter<NewPostAdapter.ViewHold
                 // Start the image capture intent to take photo
                 fragment.startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
             }
+        }
+
+        private void selectImage() {
+            final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(newPostContext);
+            builder.setTitle("Add Photo");
+            builder.setItems(options, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int item) {
+                    if (options[item].equals("Take Photo"))
+                    {
+                        String photoFileName = "photo.jpg";
+                        photoFile = getPhotoFileUri(photoFileName);
+                        launchCamera(photoFile);
+                    }
+                    else if (options[item].equals("Choose from Gallery"))
+                    {
+                        Intent intent = new   Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        fragment.startActivityForResult(intent, UPLOAD_IMAGE_ACTIVITY_REQUEST_CODE);
+                    }
+                    else if (options[item].equals("Cancel")) {
+                        dialog.dismiss();
+                    }
+                }
+            });
+            builder.show();
         }
 
         // Returns the File for a photo stored on disk given the fileName
@@ -124,5 +151,4 @@ public class NewPostAdapter extends RecyclerView.Adapter<NewPostAdapter.ViewHold
     public File getPhotoFile() {
         return photoFile;
     }
-
 }
