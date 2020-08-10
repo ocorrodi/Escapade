@@ -165,7 +165,7 @@ public class PostMapFragment extends Fragment implements GoogleMap.OnMapLongClic
         googleMap = googleMap2;
         if (googleMap != null) {
             // Map is ready
-            Toast.makeText(getContext(), "Map Fragment was loaded properly!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), "Map Fragment was loaded properly!", Toast.LENGTH_SHORT).show();
             googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
@@ -175,7 +175,7 @@ public class PostMapFragment extends Fragment implements GoogleMap.OnMapLongClic
                 }
             });
         } else {
-            Toast.makeText(getContext(), "Error - Map was null!!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getContext(), "Error - Map was null!!", Toast.LENGTH_SHORT).show();
         }
         if (homeFrag != null) homeFrag.getPosts();
         googleMap.setOnMapLongClickListener(this);

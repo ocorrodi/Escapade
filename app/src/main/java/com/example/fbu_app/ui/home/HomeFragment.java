@@ -243,7 +243,7 @@ public class HomeFragment extends Fragment {
             if (resultCode == RESULT_OK) {
                 Place place = Autocomplete.getPlaceFromIntent(data);
                 Log.i(TAG, "Place: " + place.getName() + ", " + place.getId() + ", " + place.getAddress());
-                Toast.makeText(getContext(), "ID: " + place.getId() + "address:" + place.getAddress() + "Name:" + place.getName() + " latlong: " + place.getLatLng(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), "ID: " + place.getId() + "address:" + place.getAddress() + "Name:" + place.getName() + " latlong: " + place.getLatLng(), Toast.LENGTH_LONG).show();
                 String address = place.getAddress();
                 //searchBar.setText(address);
                 currLocation = place.getLatLng();
@@ -251,7 +251,7 @@ public class HomeFragment extends Fragment {
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // TODO: Handle the error.
                 Status status = Autocomplete.getStatusFromIntent(data);
-                Toast.makeText(getContext(), "Error: " + status.getStatusMessage(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), "Error: " + status.getStatusMessage(), Toast.LENGTH_LONG).show();
                 Log.i(TAG, status.getStatusMessage());
             } else if (resultCode == RESULT_CANCELED) {
                 // The user canceled the operation.
@@ -326,7 +326,7 @@ public class HomeFragment extends Fragment {
         }
 
         void onSwipeTop() {
-            Toast.makeText(context, "Swiped Up", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Swiped Up", Toast.LENGTH_SHORT).show();
 
             mapParams.weight += halfWeight;
             listParams.weight -= halfWeight;
@@ -339,7 +339,7 @@ public class HomeFragment extends Fragment {
         }
 
         void onSwipeBottom() {
-            Toast.makeText(context, "Swiped Down", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Swiped Down", Toast.LENGTH_SHORT).show();
 
             mapParams.weight -= halfWeight;
             listParams.weight += halfWeight;
@@ -402,7 +402,7 @@ public class HomeFragment extends Fragment {
             public void done(List<ParseUser> users, ParseException e) {
                 if (e != null) {
                     Log.e(TAG, "issue with getting posts");
-                    Toast.makeText(getContext(), "error getting posts", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getContext(), "error getting posts", Toast.LENGTH_LONG).show();
                 }
                 showFilterFrag(users);
             }
@@ -443,7 +443,7 @@ public class HomeFragment extends Fragment {
             public void done(List<Post> posts2, ParseException e) {
                 if (e != null) {
                     Log.e(TAG, "issue with getting posts");
-                    Toast.makeText(getContext(), "error getting posts", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getContext(), "error getting posts", Toast.LENGTH_LONG).show();
                 }
                 for (Post post : posts2) {
                     Log.i(TAG, "Post: " + post.getTitle() + " username: " + post.getUser().getUsername());

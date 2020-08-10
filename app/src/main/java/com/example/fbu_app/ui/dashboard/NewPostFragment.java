@@ -111,32 +111,31 @@ public class NewPostFragment extends Fragment {
                 this.images.add(startIndex, photoFile);
                 this.adapter.notifyDataSetChanged();
             }
-            else if (requestCode == UPLOAD_IMAGE_ACTIVITY_REQUEST_CODE) {
-                if (requestCode == RESULT_OK) {
-                    Uri image = data.getData();
-                    Bitmap bitmap = null;
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), image);
-                        int startIndex = 0;
-
-                        File file = new File("path");
-                        OutputStream os = new BufferedOutputStream(new FileOutputStream(file));
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
-                        os.close();
-
-                        images.add(0, file);
-                        this.adapter.notifyDataSetChanged();
-                    } catch (FileNotFoundException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-            }
             else { // Result was a failure
                 Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+            }
+        }
+        else if (requestCode == UPLOAD_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Uri image = data.getData();
+                Bitmap bitmap = null;
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), image);
+                    int startIndex = 0;
+
+                    File file = new File("path");
+                    OutputStream os = new BufferedOutputStream(new FileOutputStream(file));
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+                    images.add(startIndex, file);
+
+                    Log.d("image: ", file.getPath());
+
+                    this.adapter.notifyDataSetChanged();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

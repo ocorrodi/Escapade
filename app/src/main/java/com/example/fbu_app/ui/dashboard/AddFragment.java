@@ -198,7 +198,7 @@ public class AddFragment extends Fragment {
                 Place place = Autocomplete.getPlaceFromIntent(data);
                 AddressComponents ac = place.getAddressComponents();
                 Log.i(TAG, "Place: " + place.getName() + ", " + place.getId() + ", " + place.getAddress());
-                Toast.makeText(getContext(), "ID: " + place.getId() + "address:" + place.getAddress() + "Name:" + place.getName() + " latlong: " + place.getLatLng(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), "ID: " + place.getId() + "address:" + place.getAddress() + "Name:" + place.getName() + " latlong: " + place.getLatLng(), Toast.LENGTH_LONG).show();
                 String address = place.getAddress();
                 this.locationName = address;
                 this.etLocation.setText(address);
@@ -208,7 +208,7 @@ public class AddFragment extends Fragment {
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // TODO: Handle the error.
                 Status status = Autocomplete.getStatusFromIntent(data);
-                Toast.makeText(getContext(), "Error: " + status.getStatusMessage(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), "Error: " + status.getStatusMessage(), Toast.LENGTH_LONG).show();
                 Log.i(TAG, status.getStatusMessage());
             } else if (resultCode == RESULT_CANCELED) {
                 // The user canceled the operation.
@@ -227,6 +227,7 @@ public class AddFragment extends Fragment {
         post.setNotes(this.etNotes.getText().toString());
         post.setPlace(this.locationName);
         post.setCountry(getCountry(location.getLatitude(), location.getLongitude()));
+        post.setUserName(currentUser.getString("name"));
         List<File> images = this.newPostFrag.getImages();
         int startIndex = 0;
         int endIndex = images.size() - 1;
@@ -236,7 +237,7 @@ public class AddFragment extends Fragment {
             public void done(ParseException e) {
                 if (e != null) {
                     Log.e(TAG, "Error while saving", e);
-                    Toast.makeText(getContext(), "Error saving post", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getContext(), "Error saving post", Toast.LENGTH_LONG).show();
                 }
                 Log.i(TAG, "post save was successful");
                 etDate.setText("");

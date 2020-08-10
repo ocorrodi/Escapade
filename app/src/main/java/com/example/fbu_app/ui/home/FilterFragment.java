@@ -136,7 +136,8 @@ public class FilterFragment extends DialogFragment {
     public void mapUsers() {
         userNames = new ArrayList<>();
         for (ParseUser user : users) {
-            userNames.add(user.getString("name"));
+            String name = user.getString("name");
+            if (name != null) userNames.add(name);
         }
         userNames = new ArrayList(new HashSet(userNames)); //remove duplicates
     }
