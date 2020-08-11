@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -92,6 +93,8 @@ public class HomeFragment extends Fragment {
     public String filterCountry;
     public String sortParam;
 
+    public ProgressBar pbLoading;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,6 +114,7 @@ public class HomeFragment extends Fragment {
 
         this.manager = getFragmentManager();
 
+        pbLoading = view.findViewById(R.id.pbLoading);
 
         this.layout2 = view.findViewById(R.id.map);
         this.layout1 = view.findViewById(R.id.list);
@@ -200,7 +204,7 @@ public class HomeFragment extends Fragment {
                 if (isSearch) {
                     sortPosts(posts2);
                 }
-                posts.addAll(posts2);
+                hideProgressBar();
                 listFrag.setPosts(posts2); //pass updated posts to list fragment
                 mapFrag.setPosts(posts2); //pass updated posts to map fragment
             }
@@ -234,6 +238,7 @@ public class HomeFragment extends Fragment {
     }
 
     public void getPosts() {
+        pbLoading.setVisibility(View.VISIBLE);
         queryPosts(false);
     }
 
@@ -455,5 +460,11 @@ public class HomeFragment extends Fragment {
                 mapFrag.setPosts(posts2); //pass updated posts to map fragment
             }
         });
+    }
+
+    public void hideProgressBar() {
+        pbLoading.setVisibility(View.INVISIBLE);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0,0);
+        pbLoading.setLayoutParams(params);
     }
 }

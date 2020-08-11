@@ -65,6 +65,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                loadingProgressBar.setVisibility(View.VISIBLE);
                 String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
                 loginUser(username, password);
@@ -74,9 +75,13 @@ public class LoginActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                loadingProgressBar.setVisibility(View.VISIBLE);
                 String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
-                if (!checkPasswordSignup()) return;
+                if (!checkPasswordSignup()) {
+                    loadingProgressBar.setVisibility(View.INVISIBLE);
+                    return;
+                }
                 usernameInUse(username);
             }
         });
@@ -124,6 +129,7 @@ public class LoginActivity extends AppCompatActivity {
     //go to the FB login page
     private void goFBLogin() {
         Intent i = new Intent(this, FBLoginActivity.class);
+        loadingProgressBar.setVisibility(View.INVISIBLE);
         startActivity(i);
         finish();
     }
@@ -139,6 +145,7 @@ public class LoginActivity extends AppCompatActivity {
             public void done(List<ParseUser> users, ParseException e) {
                 if (e != null || users.size() > 0) {
                     usernameLayout.setError("Username is already in use");
+                    loadingProgressBar.setVisibility(View.INVISIBLE);
                     return;
                 }
                 usernameLayout.setError(null);
@@ -151,6 +158,7 @@ public class LoginActivity extends AppCompatActivity {
         String password = passwordEditText.getText().toString();
         if (password.length() < 6) {
             passwordLayout.setError("Password must be at least 6 characters");
+            loadingProgressBar.setVisibility(View.INVISIBLE);
             return false;
         }
         usernameLayout.setError(null);
