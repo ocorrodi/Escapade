@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.example.fbu_app.R;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
@@ -123,12 +124,20 @@ public class NewPostFragment extends Fragment {
                     bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), image);
                     int startIndex = 0;
 
-                    File file = new File("path");
-                    OutputStream os = new BufferedOutputStream(new FileOutputStream(file));
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
-                    images.add(startIndex, file);
+                    //create a file to write bitmap data
+                    File f = new File(getContext().getCacheDir(), "newFile");
+                    f.createNewFile();
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
+                    byte[] bitmapdata = bos.toByteArray();
 
-                    Log.d("image: ", file.getPath());
+                    //write the bytes in file
+                    FileOutputStream fos = new FileOutputStream(f);
+                    fos.write(bitmapdata);
+                    fos.flush();
+                    fos.close();
+                    images.add(startIndex, f);
+
 
                     this.adapter.notifyDataSetChanged();
                 } catch (FileNotFoundException e) {

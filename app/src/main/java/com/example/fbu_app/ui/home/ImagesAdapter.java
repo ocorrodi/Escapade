@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.fbu_app.R;
 
 import java.io.File;
@@ -35,7 +38,7 @@ public class ImagesAdapter extends RecyclerView.Adapter<ImagesAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Glide.with(this.context).load(this.images.get(position)).into(holder.ivImage);
+        Glide.with(this.context).load(this.images.get(position)).apply(new RequestOptions().transform(new RoundedCorners(20))).into(holder.ivImage);
     }
 
     @Override

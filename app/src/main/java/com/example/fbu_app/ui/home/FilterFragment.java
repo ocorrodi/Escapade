@@ -116,6 +116,7 @@ public class FilterFragment extends DialogFragment {
         this.sort.setAdapter(sortAdapter);
 
         getDialog().getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         btnApply.setOnClickListener(new View.OnClickListener() {
             @Override

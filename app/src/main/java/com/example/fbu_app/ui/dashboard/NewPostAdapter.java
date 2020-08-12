@@ -20,6 +20,8 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.fbu_app.R;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -55,7 +57,7 @@ public class NewPostAdapter extends RecyclerView.Adapter<NewPostAdapter.ViewHold
             return;
         }
         holder.image = images.get(position);
-        Glide.with(holder.context).load(holder.image).into(holder.newImage);
+        Glide.with(holder.context).load(holder.image).apply(new RequestOptions().transform(new RoundedCorners(20))).into(holder.newImage);
 
     }
 

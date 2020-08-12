@@ -184,7 +184,7 @@ public class HomeFragment extends Fragment {
 
         query.include(Post.KEY_USER);
 
-        query.setLimit(1);
+        query.setLimit(10);
 
         if (!isSearch) query.setLimit(numPosts);
         query.addDescendingOrder("createdAt");
@@ -205,6 +205,8 @@ public class HomeFragment extends Fragment {
                     sortPosts(posts2);
                 }
                 hideProgressBar();
+                posts.clear();
+                posts.addAll(posts2);
                 listFrag.setPosts(posts2); //pass updated posts to list fragment
                 mapFrag.setPosts(posts2); //pass updated posts to map fragment
             }
@@ -229,7 +231,7 @@ public class HomeFragment extends Fragment {
                 android.location.Location.distanceBetween(startLat2, startLong2, endLat, endLong, results2);
                 if (Math.abs(results1[0] - results2[0]) <= FIVE_MILES_IN_METERS) {
                     //locations are approximately same distance away (5 mile buffer)
-                    return Integer.compare(post.getLikes(), t1.getLikes());
+                    return Integer.compare(t1.getLikes(), post.getLikes());
                 }
                 return Float.compare(results1[0], results2[0]);
             }
