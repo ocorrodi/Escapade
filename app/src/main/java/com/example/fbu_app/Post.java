@@ -1,15 +1,11 @@
 package com.example.fbu_app;
 
-import android.media.Image;
-
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
-import org.parceler.Parcel;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -61,10 +57,6 @@ public class Post extends ParseObject {
         return getList(KEY_IMAGES);
     }
 
-    public List<String> getTags() {
-        return getList(KEY_TAGS);
-    }
-
     public void setUser(ParseUser user) {
         put(KEY_USER, user);
     }
@@ -87,10 +79,6 @@ public class Post extends ParseObject {
 
     public void setImages(List<ParseFile> images) {
         put(KEY_IMAGES, images);
-    }
-
-    public void setTags(List<String> tags) {
-        put(KEY_TAGS, tags);
     }
 
     public void setRating(int rating) {
@@ -120,5 +108,10 @@ public class Post extends ParseObject {
     }
 
     public void setLikes(int likes) { put(KEY_LIKES, likes); }
+
+
+    public List<String> getTags() { return getList(KEY_TAGS); }
+
+    public void setTags(ArrayList<String> tags) { put(KEY_TAGS, tags); }
 
 }

@@ -95,6 +95,8 @@ public class HomeFragment extends Fragment {
 
     public ProgressBar pbLoading;
 
+    ArrayList<String> tags;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -422,17 +424,19 @@ public class HomeFragment extends Fragment {
         filterFrag.show(getFragmentManager(), TAG);
     }
 
-    public void startFilter(String countryName, String userName, String sortParam) {
+    public void startFilter(String countryName, String userName, String sortParam, ArrayList<String> tags) {
         this.filterCountry = countryName;
         this.sortParam = sortParam;
-        queryPostsWithParams(userName, filterCountry, sortParam);
+        this.tags = tags;
+        queryPostsWithParams(userName, filterCountry, sortParam, tags);
     }
 
-    protected void queryPostsWithParams(String user, String countryName, String sortParam) {
+    protected void queryPostsWithParams(String user, String countryName, String sortParam, ArrayList<String> tags) {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
 
         query.include(Post.KEY_USER);
 
+        query.whereContainedIn("tags", tags);
 
         if (user != "Any") query.whereEqualTo("userName", user);
         if (countryName != "Any") query.whereEqualTo("country", countryName);

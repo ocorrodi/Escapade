@@ -43,6 +43,8 @@ import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.parse.ParseException;
@@ -83,6 +85,7 @@ public class AddFragment extends Fragment {
     String locationName;
     LatLng locationToAdd;
     String country;
+    ChipGroup tagsChipGroup;
 
     public AddFragment() {
         this.locationToAdd = null;
@@ -121,6 +124,7 @@ public class AddFragment extends Fragment {
         this.etNotes = view.findViewById(R.id.etNotes);
         this.etDateLayout = view.findViewById(R.id.etDateLayout);
         this.etLocationLayout = view.findViewById(R.id.etLocationLayout);
+        this.tagsChipGroup = view.findViewById(R.id.chips_group);
 
         if (locationToAdd != null) {
             etLocation.setText(getAddress(locationToAdd.latitude, locationToAdd.longitude));
@@ -218,11 +222,14 @@ public class AddFragment extends Fragment {
 
     //save a post into Parse with given attributes
     private void savePost(final String title, ParseUser currentUser, ParseGeoPoint location, Date date) {
+        ArrayList<String> tags = new ArrayList<>();
+        getSelectedTags(tags);
         Post post = new Post();
         post.setTitle(title);
         post.setUser(currentUser);
         post.setLocation(location);
         post.setDate(date);
+        post.setTags(tags);
         post.setLikes(0); //initialize number of likes to 0
         post.setNotes(this.etNotes.getText().toString());
         post.setPlace(this.locationName);
@@ -245,6 +252,7 @@ public class AddFragment extends Fragment {
                 etTitle.setText("");
                 newPostFrag.clearImages();
                 etNotes.setText("");
+                resetChips();
             }
         });
     }
@@ -310,6 +318,22 @@ public class AddFragment extends Fragment {
             // TODO Auto-generated catch block
             e.printStackTrace();
             return "";
+        }
+    }
+
+    public void getSelectedTags(ArrayList<String> tags) {
+        for (int i = 0; i < tagsChipGroup.getChildCount(); i++) {
+            Chip chip = (Chip) tagsChipGroup.getChildAt(i);
+            if (chip.isChecked()) {
+                tags.add(chip.getText().toString());
+            }
+        }
+    }
+
+    public void resetChips() {
+        for (int i = 0; i < tagsChipGroup.getChildCount(); i++) {
+            Chip chip = (Chip) tagsChipGroup.getChildAt(i);
+            chip.setChecked(false);
         }
     }
 }

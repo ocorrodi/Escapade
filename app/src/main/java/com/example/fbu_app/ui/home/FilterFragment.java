@@ -19,6 +19,8 @@ import android.widget.Spinner;
 
 import com.example.fbu_app.R;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.parse.ParseUser;
 
 import org.parceler.Parcels;
@@ -53,6 +55,7 @@ public class FilterFragment extends DialogFragment {
     ArrayAdapter countriesAdapter;
     ArrayAdapter sortAdapter;
 
+    ChipGroup tagsChipGroup;
 
     public FilterFragment() {
         // Required empty public constructor
@@ -93,6 +96,7 @@ public class FilterFragment extends DialogFragment {
         this.country = view.findViewById(R.id.country);
         this.sort = view.findViewById(R.id.sort);
         this.btnApply = view.findViewById(R.id.btnApply);
+        this.tagsChipGroup = view.findViewById(R.id.chips_group);
 
         int spinnerLayout = R.layout.spinner_item;
 
@@ -125,9 +129,12 @@ public class FilterFragment extends DialogFragment {
                 currSortParam = sortParams[sort.getSelectedItemPosition()];
                 currUserName = userNames.get(user.getSelectedItemPosition());
 
+                final ArrayList<String> tags = new ArrayList<>();
+                getSelectedTags(tags);
+
                 HomeFragment homeFragment = getHomeFragment();
 
-                homeFragment.startFilter(currCountry, currUserName, currSortParam);
+                homeFragment.startFilter(currCountry, currUserName, currSortParam, tags);
 
                 getDialog().dismiss();
             }
@@ -160,5 +167,12 @@ public class FilterFragment extends DialogFragment {
         return null;
     }
 
-
+    public void getSelectedTags(ArrayList<String> tags) {
+        for (int i = 0; i < tagsChipGroup.getChildCount(); i++) {
+            Chip chip = (Chip) tagsChipGroup.getChildAt(i);
+            if (chip.isChecked()) {
+                tags.add(chip.getText().toString());
+            }
+        }
+    }
 }

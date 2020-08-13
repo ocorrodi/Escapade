@@ -26,6 +26,8 @@ import com.example.fbu_app.User;
 import com.example.fbu_app.ui.profile.ProfileFragment;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textview.MaterialTextView;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -51,6 +53,7 @@ public class PostDetailDialogFragment extends DialogFragment {
     MaterialTextView tvDate;
     ImageButton ivProfile;
     ImageButton btnLike;
+    ChipGroup tagChips;
 
     public PostDetailDialogFragment() {}
 
@@ -67,6 +70,7 @@ public class PostDetailDialogFragment extends DialogFragment {
         bundle.putString("date", post.getDate().toString());
         bundle.putString("image", post.getUser().getString("profileImageUri"));
         bundle.putParcelable("user", Parcels.wrap(post.getUser()));
+        bundle.putStringArrayList("tags", (ArrayList<String>) post.getTags());
         frag.setArguments(bundle);
         return frag;
     }
@@ -93,6 +97,7 @@ public class PostDetailDialogFragment extends DialogFragment {
         this.tvDate = view.findViewById(R.id.tvDate);
         this.ivProfile = view.findViewById(R.id.ivProfile);
         this.btnLike = view.findViewById(R.id.btnLike);
+        this.tagChips = view.findViewById(R.id.tag_chips);
 
         ImagesFragment imagesFrag;
 
@@ -128,6 +133,8 @@ public class PostDetailDialogFragment extends DialogFragment {
         this.tvTitle.setText(title);
         this.tvNotes.setText(getArguments().getString("notes"));
         this.tvLocation.setText(getAddress(getArguments().getDouble("latitude"), getArguments().getDouble("longitude")));
+
+        arrayToChips(getArguments().getStringArrayList("tags"));
 
         String myFormat = "MM/dd/yy"; //format for date label
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
@@ -249,5 +256,16 @@ public class PostDetailDialogFragment extends DialogFragment {
             if (((Post) likedPosts.get(i)).getObjectId().equals(post.getObjectId())) return i;
         }
         return 0;
+    }
+
+    private void arrayToChips(ArrayList<String> tags) {
+        Chip lChip = new Chip(getContext());
+        for (int i = 0; i < tags.size(); i++) {
+            lChip.setText(tags.get(i));
+            lChip.setTextColor(getResources().getColor(R.color.white));
+            lChip.setChipBackgroundColor(getResources().getColorStateList(R.color.colorAccent));
+
+            this.tagChips.addView(lChip, tagChips.getChildCount() - 1);
+        }
     }
 }
