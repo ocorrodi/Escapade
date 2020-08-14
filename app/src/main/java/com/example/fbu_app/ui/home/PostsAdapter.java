@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.location.Address;
 import android.location.Geocoder;
 import android.view.LayoutInflater;
@@ -18,9 +19,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.fbu_app.Post;
 import com.example.fbu_app.R;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.parse.ParseException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -29,11 +33,15 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     private final List<Post> posts;
     FragmentManager manager;
     Context context;
+    Resources resources;
+    LayoutInflater layoutInflater;
 
-    public PostsAdapter(List<Post> posts, FragmentManager manager, Context context) {
+    public PostsAdapter(List<Post> posts, FragmentManager manager, Context context, Resources resources, LayoutInflater layoutInflater) {
         this.posts = posts;
         this.manager = manager;
         this.context = context;
+        this.resources = resources;
+        this.layoutInflater = layoutInflater;
     }
 
     @Override
@@ -47,6 +55,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Post newPost = posts.get(position);
         holder.tvTitle.setText(newPost.getTitle());
+
+        List<String> tags = newPost.getTags();
+
+        arrayToChips(tags, holder.tagsChipGroup);
 
         Glide.with(context).load(newPost.getUser().getString("profileImageUri")).apply(RequestOptions.circleCropTransform()).into(holder.ivImage);
 
@@ -71,7 +83,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         public TextView tvLocation;
         public ImageView ivImage;
         public Post post;
-
+        ChipGroup tagsChipGroup;
 
         public ViewHolder(View view) {
             super(view);
@@ -79,6 +91,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             this.tvTitle = view.findViewById(R.id.tvTitle);
             this.tvLocation = view.findViewById(R.id.tvAddress);
             this.ivImage = view.findViewById(R.id.ivImage);
+            this.tagsChipGroup = view.findViewById(R.id.chip_group_tags);
             view.setOnClickListener(this);
         }
 
@@ -116,6 +129,16 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             e.printStackTrace();
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
             return "";
+        }
+    }
+
+    private void arrayToChips(List<String> tags, ChipGroup tagChipGroup) {
+        tagChipGroup.removeAllViews();
+        Chip chip =
+                (Chip) layoutInflater.inflate(R.layout.item_chip, tagChipGroup, false);
+        for (int i = 0; i < tags.size(); i++) {
+            chip.setText(tags.get(i));
+            tagChipGroup.addView(chip, tagChipGroup.getChildCount() - 1);
         }
     }
 }

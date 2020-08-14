@@ -72,7 +72,7 @@ public class GenericPostListFragment extends Fragment {
 
         posts = new ArrayList<>();
 
-        adapter = new PostsAdapter(posts, getFragmentManager(), getContext());
+        adapter = new PostsAdapter(posts, getFragmentManager(), getContext(), getResources(), getLayoutInflater());
 
         rvPosts.setAdapter(adapter);
 

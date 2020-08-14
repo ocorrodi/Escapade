@@ -264,7 +264,8 @@ public class PostDetailDialogFragment extends DialogFragment {
             lChip.setText(tags.get(i));
             lChip.setTextColor(getResources().getColor(R.color.white));
             lChip.setChipBackgroundColor(getResources().getColorStateList(R.color.colorAccent));
-
+            lChip.setCheckable(false);
+            lChip.setTextIsSelectable(false);
             this.tagChips.addView(lChip, tagChips.getChildCount() - 1);
         }
     }

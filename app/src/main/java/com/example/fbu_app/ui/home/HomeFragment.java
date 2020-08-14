@@ -78,6 +78,8 @@ public class HomeFragment extends Fragment {
     final double halfWeight = .5;
     final int numPosts = 10;
     final int FIVE_MILES_IN_METERS = 8047;
+    final int ONE_MILE_IN_METERS = 1609;
+    final int HUNDRED_MILES_IN_METERS = 160940;
 
     public LinearLayout layout2;
     public LinearLayout layout1;
@@ -204,7 +206,7 @@ public class HomeFragment extends Fragment {
                     //Toast.makeText(getContext(), "success with posts", Toast.LENGTH_LONG).show();
                 }
                 if (isSearch) {
-                    sortPosts(posts2);
+                    posts2 = sortPosts(posts2);
                 }
                 hideProgressBar();
                 posts.clear();
@@ -217,28 +219,35 @@ public class HomeFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     //sort the posts according to distance from currLocation
-    public void sortPosts(List<Post> posts2) {
+    public List<Post> sortPosts(List<Post> posts2) {
         posts2.sort(new Comparator<Post>() {
             @Override
             public int compare(Post post, Post t1) {
-                float[] results1 = new float[1];
-                float[] results2 = new float[1];
-                double startLat1 = post.getLocation().getLatitude();
-                double startLong1 = post.getLocation().getLongitude();
-                double startLat2 = t1.getLocation().getLatitude();
-                double startLong2 = t1.getLocation().getLongitude();
-                double endLat = currLocation.latitude;
-                double endLong = currLocation.longitude;
-                android.location.Location.distanceBetween(startLat1, startLong1, endLat, endLong, results1);
-                android.location.Location.distanceBetween(startLat2, startLong2, endLat, endLong, results2);
-                if (Math.abs(results1[0] - results2[0]) <= FIVE_MILES_IN_METERS) {
+                float dist1 = distToCurr(post);
+                float dist2 = distToCurr(t1);
+                if (Math.abs(dist1 - dist2) <= ONE_MILE_IN_METERS) {
                     //locations are approximately same distance away (5 mile buffer)
                     return Integer.compare(t1.getLikes(), post.getLikes());
                 }
-                return Float.compare(results1[0], results2[0]);
+                return Float.compare(dist1, dist2);
             }
         });
-        posts2.subList(0, Math.min(posts2.size(), numPosts));
+        for (int i = 0; i < posts2.size(); i++) {
+            if (distToCurr(posts2.get(i)) > HUNDRED_MILES_IN_METERS) {
+                return posts2.subList(0, i);
+            }
+        }
+        return posts2.subList(0, Math.min(posts2.size(), numPosts));
+    }
+
+    public float distToCurr(Post post) {
+        float[] results1 = new float[1];
+        double startLat1 = post.getLocation().getLatitude();
+        double startLong1 = post.getLocation().getLongitude();
+        double endLat = currLocation.latitude;
+        double endLong = currLocation.longitude;
+        android.location.Location.distanceBetween(startLat1, startLong1, endLat, endLong, results1);
+        return results1[0];
     }
 
     public void getPosts() {

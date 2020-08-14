@@ -76,7 +76,7 @@ public class PostListFragment extends Fragment {
         Context context = newView.getContext();
         RecyclerView recyclerView = (RecyclerView) newView;
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new PostsAdapter(posts, getFragmentManager(), context);
+        adapter = new PostsAdapter(posts, getFragmentManager(), context, getResources(), getLayoutInflater());
         recyclerView.setAdapter(adapter);
     }
 
