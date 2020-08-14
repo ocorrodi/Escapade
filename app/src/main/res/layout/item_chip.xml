@@ -5,4 +5,5 @@
     android:layout_height="wrap_content"
     app:chipBackgroundColor="@color/colorAccent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" />
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+    </com.google.android.material.chip.Chip>

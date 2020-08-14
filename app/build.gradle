@@ -58,5 +58,6 @@ dependencies {
     androidTestImplementation 'androidx.test:core:1.1.0'
     androidTestImplementation 'androidx.test:runner:1.2.0-alpha05'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha05'
+    implementation 'com.google.maps.android:android-maps-utils:0.5'
 
 }
