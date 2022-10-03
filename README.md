@@ -1,4 +1,4 @@
-# FBU Final App
+# Escapade
 
 ## Table of Contents
 1. [Overview](#Overview)
